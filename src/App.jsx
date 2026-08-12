@@ -1,5 +1,8 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Layout from "./components/Layout";
 import { useAuth } from "./context/AuthContext";
+import Administradores from "./pages/Administradores";
+import Eventos from "./pages/Eventos";
 import Login from "./pages/Login";
 
 function RotaProtegida({ children }) {
@@ -15,31 +18,14 @@ function RotaProtegida({ children }) {
 
 function Dashboard() {
 
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
-  function handleLogout() {
-
-    logout();
-
-    navigate("/login", { replace: true });
-  }
-
   return (
-    <main>
-      <h1>Dashboard</h1>
+    <section>
+      <h2>Dashboard</h2>
 
       <p>
         Bem-vindo ao Gerenciador de Eventos.
       </p>
-
-      <button
-        type="button"
-        onClick={handleLogout}
-      >
-        Sair
-      </button>
-    </main>
+    </section>
   );
 }
 
@@ -54,13 +40,27 @@ function App() {
       />
 
       <Route
-        path="/"
         element={
           <RotaProtegida>
-            <Dashboard />
+            <Layout />
           </RotaProtegida>
         }
-      />
+      >
+        <Route
+          path="/"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/eventos"
+          element={<Eventos />}
+        />
+
+        <Route
+          path="/administradores"
+          element={<Administradores />}
+        />
+      </Route>
 
     </Routes>
   );
