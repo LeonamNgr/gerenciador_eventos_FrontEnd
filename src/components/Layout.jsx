@@ -1,79 +1,219 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import {
+    Outlet,
+    useLocation,
+    useNavigate,
+} from "react-router-dom";
+
 import { useAuth } from "../context/AuthContext";
+
+import "./Layout.css";
 
 function Layout() {
 
-    const { autenticado, logout } = useAuth();
+    const {
+        logout,
+        autenticado,
+    } = useAuth();
+
     const navigate = useNavigate();
 
+    const location = useLocation();
+
     function handleLogout() {
+
         logout();
-        navigate("/eventos", { replace: true });
+
+        navigate("/login", {
+            replace: true,
+        });
     }
 
-    function handleLogin() {
-        navigate("/login");
+    function estaAtivo(caminho) {
+
+        if (caminho === "/eventos") {
+
+            return (
+                location.pathname === "/" ||
+                location.pathname.startsWith("/eventos")
+            );
+        }
+
+        return location.pathname.startsWith(caminho);
     }
 
     return (
-        <div>
+        <div className="layout">
 
-            <header>
+            {/* =========================
+                NAVBAR
+            ========================= */}
 
-                <h1>Gerenciador de Eventos</h1>
+            <header className="navbar">
 
-                <nav>
+                <div className="navbar-container">
+
+                    {/* LOGO */}
 
                     <button
                         type="button"
-                        onClick={() => navigate("/eventos")}
+                        className="navbar-brand"
+                        onClick={() =>
+                            navigate("/")
+                        }
                     >
-                        Eventos
+
+                        <strong>
+                            Gerenciador
+                        </strong>
+
+                        <span>
+                            de Eventos
+                        </span>
+
                     </button>
 
-                    {autenticado && (
-                        <>
-                            <button
-                                type="button"
-                                onClick={() => navigate("/")}
-                            >
-                                Dashboard
-                            </button>
+
+                    {/* NAVEGAÇÃO */}
+
+                    <nav className="navbar-nav">
+
+                        <button
+                            type="button"
+                            className={
+                                estaAtivo("/eventos")
+                                    ? "navbar-link active"
+                                    : "navbar-link"
+                            }
+                            onClick={() =>
+                                navigate("/eventos")
+                            }
+                        >
+                            Eventos
+                        </button>
+
+
+                        {autenticado && (
+
+                            <>
+
+                                <button
+                                    type="button"
+                                    className={
+                                        estaAtivo("/dashboard")
+                                            ? "navbar-link active"
+                                            : "navbar-link"
+                                    }
+                                    onClick={() =>
+                                        navigate("/dashboard")
+                                    }
+                                >
+                                    Dashboard
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    className={
+                                        estaAtivo(
+                                            "/administradores"
+                                        )
+                                            ? "navbar-link active"
+                                            : "navbar-link"
+                                    }
+                                    onClick={() =>
+                                        navigate(
+                                            "/administradores"
+                                        )
+                                    }
+                                >
+                                    Administradores
+                                </button>
+
+                            </>
+
+                        )}
+
+                    </nav>
+
+
+                    {/* LOGIN / LOGOUT */}
+
+                    <div className="navbar-actions">
+
+                        {autenticado ? (
 
                             <button
                                 type="button"
-                                onClick={() =>
-                                    navigate("/administradores")
-                                }
-                            >
-                                Administradores
-                            </button>
-
-                            <button
-                                type="button"
+                                className="navbar-button logout"
                                 onClick={handleLogout}
                             >
                                 Sair
                             </button>
-                        </>
-                    )}
 
-                    {!autenticado && (
-                        <button
-                            type="button"
-                            onClick={handleLogin}
-                        >
-                            Entrar
-                        </button>
-                    )}
+                        ) : (
 
-                </nav>
+                            <button
+                                type="button"
+                                className="navbar-button login"
+                                onClick={() =>
+                                    navigate("/login")
+                                }
+                            >
+                                Entrar
+                            </button>
+
+                        )}
+
+                    </div>
+
+                </div>
 
             </header>
 
-            <main>
+
+            {/* =========================
+                CONTEÚDO
+            ========================= */}
+
+            <main className="layout-content">
+
                 <Outlet />
+
             </main>
+
+
+            {/* =========================
+                FOOTER
+            ========================= */}
+
+            <footer className="footer">
+
+                <div className="footer-container">
+
+                    <div className="footer-brand">
+
+                        <strong>
+                            Gerenciador de Eventos
+                        </strong>
+
+                        <span>
+                            Sistema de gerenciamento de eventos
+                        </span>
+
+                    </div>
+
+
+                    <div className="footer-info">
+
+                        <span>
+                            © 2026 Gerenciador de Eventos
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </footer>
 
         </div>
     );

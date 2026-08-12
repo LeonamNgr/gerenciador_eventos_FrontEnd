@@ -1,20 +1,54 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+
 import {
+    buscarPorId,
     buscarPorNome,
     buscarTodos,
 } from "../services/eventoService";
 
+import {
+    formatarData,
+    formatarHora,
+} from "../utils/formatadores";
+
+import "./Eventos.css";
+
 function Eventos() {
 
     const navigate = useNavigate();
+
     const { autenticado } = useAuth();
 
     const [eventos, setEventos] = useState([]);
     const [nome, setNome] = useState("");
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
+
+    function ordenarPorData(lista) {
+
+        return [...lista].sort((a, b) => {
+
+            if (!a.data) {
+                return 1;
+            }
+
+            if (!b.data) {
+                return -1;
+            }
+
+            const dataA = new Date(
+                `${a.data}T00:00:00`
+            );
+
+            const dataB = new Date(
+                `${b.data}T00:00:00`
+            );
+
+            return dataA - dataB;
+        });
+    }
 
     async function carregarEventos() {
 
@@ -25,7 +59,9 @@ function Eventos() {
 
             const dados = await buscarTodos();
 
-            setEventos(dados);
+            setEventos(
+                ordenarPorData(dados)
+            );
 
         } catch (error) {
 
@@ -45,27 +81,65 @@ function Eventos() {
 
         event.preventDefault();
 
+        const termo = nome.trim();
+
+        if (!termo) {
+
+            await carregarEventos();
+
+            return;
+        }
+
         try {
 
             setErro("");
             setCarregando(true);
 
-            if (!nome.trim()) {
-                await carregarEventos();
+            /*
+             * Se o usuário digitou somente números,
+             * a busca será realizada pelo ID.
+             */
+            if (/^\d+$/.test(termo)) {
+
+                const dados = await buscarPorId(termo);
+
+                setEventos(
+                    ordenarPorData([dados])
+                );
+
                 return;
             }
 
-            const dados = await buscarPorNome(nome);
+            /*
+             * Caso contrário,
+             * a busca será realizada pelo nome.
+             */
+            const dados = await buscarPorNome(termo);
 
-            setEventos(dados);
+            setEventos(
+                ordenarPorData(dados)
+            );
 
         } catch (error) {
 
             console.error(error);
 
-            setErro(
-                "Não foi possível realizar a busca."
-            );
+            if (error.response?.status === 404) {
+
+                setEventos([]);
+
+                setErro(
+                    "Nenhum evento encontrado."
+                );
+
+            } else {
+
+                setEventos([]);
+
+                setErro(
+                    "Não foi possível realizar a busca."
+                );
+            }
 
         } finally {
 
@@ -76,44 +150,94 @@ function Eventos() {
     function limparBusca() {
 
         setNome("");
+
         carregarEventos();
     }
 
     useEffect(() => {
+
         carregarEventos();
+
     }, []);
 
     return (
-        <section>
+        <section className="eventos-page">
 
-            <h2>Eventos</h2>
+            {/* =========================
+                CABEÇALHO
+            ========================= */}
 
-            {autenticado && (
+            <div className="eventos-header">
+
+                <div>
+
+                    <span className="eventos-eyebrow">
+                        PROGRAMAÇÃO
+                    </span>
+
+                    <h2>
+                        Eventos
+                    </h2>
+
+                    <p>
+                        Encontre eventos e confira todos os detalhes.
+                    </p>
+
+                </div>
+
+                {autenticado && (
+
+                    <button
+                        type="button"
+                        className="evento-primary-button"
+                        onClick={() =>
+                            navigate("/eventos/novo")
+                        }
+                    >
+                        + Novo evento
+                    </button>
+
+                )}
+
+            </div>
+
+
+            {/* =========================
+                BUSCA
+            ========================= */}
+
+            <form
+                className="eventos-search"
+                onSubmit={handleBuscar}
+            >
+
+                <div className="search-input-wrapper">
+
+                    <span className="search-icon">
+                        🔎
+                    </span>
+
+                    <input
+                        type="text"
+                        placeholder="Buscar por nome ou ID..."
+                        value={nome}
+                        onChange={(event) =>
+                            setNome(event.target.value)
+                        }
+                    />
+
+                </div>
+
                 <button
-                    type="button"
-                    onClick={() => navigate("/eventos/novo")}
+                    type="submit"
+                    className="search-button"
                 >
-                    Novo Evento
-                </button>
-            )}
-
-            <form onSubmit={handleBuscar}>
-
-                <input
-                    type="text"
-                    placeholder="Buscar evento por nome"
-                    value={nome}
-                    onChange={(event) =>
-                        setNome(event.target.value)
-                    }
-                />
-
-                <button type="submit">
                     Buscar
                 </button>
 
                 <button
                     type="button"
+                    className="clear-button"
                     onClick={limparBusca}
                 >
                     Limpar
@@ -121,72 +245,173 @@ function Eventos() {
 
             </form>
 
+
+            {/* =========================
+                CARREGANDO
+            ========================= */}
+
             {carregando && (
-                <p>Carregando eventos...</p>
+
+                <div className="eventos-state">
+
+                    <p>
+                        Carregando eventos...
+                    </p>
+
+                </div>
+
             )}
 
+
+            {/* =========================
+                ERRO
+            ========================= */}
+
             {erro && (
-                <p>{erro}</p>
+
+                <div className="eventos-state eventos-error">
+
+                    <p>
+                        {erro}
+                    </p>
+
+                </div>
+
             )}
+
+
+            {/* =========================
+                NENHUM EVENTO
+            ========================= */}
 
             {!carregando &&
                 !erro &&
                 eventos.length === 0 && (
-                    <p>
-                        Nenhum evento encontrado.
-                    </p>
+
+                    <div className="eventos-state">
+
+                        <h3>
+                            Nenhum evento encontrado
+                        </h3>
+
+                        <p>
+                            Tente buscar pelo nome ou pelo ID do evento.
+                        </p>
+
+                    </div>
+
                 )}
+
+
+            {/* =========================
+                LISTA DE EVENTOS
+            ========================= */}
 
             {!carregando &&
                 !erro &&
                 eventos.length > 0 && (
 
-                    <ul>
+                    <div className="eventos-grid">
 
                         {eventos.map((evento) => (
 
-                            <li key={evento.id}>
+                            <article
+                                className="evento-card"
+                                key={evento.id}
+                                onClick={() =>
+                                    navigate(
+                                        `/eventos/${evento.id}`
+                                    )
+                                }
+                            >
 
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        navigate(
-                                            `/eventos/${evento.id}`
-                                        )
-                                    }
-                                >
+                                {/* IMAGEM */}
 
-                                    {evento.imagem && (
+                                <div className="evento-image-wrapper">
+
+                                    {evento.imagem ? (
+
                                         <img
                                             src={evento.imagem}
                                             alt={`Imagem do evento ${evento.nomeEvento}`}
-                                            width="300"
+                                            className="evento-image"
                                         />
+
+                                    ) : (
+
+                                        <div className="evento-image-placeholder">
+
+                                            <span>
+                                                Sem imagem
+                                            </span>
+
+                                        </div>
+
                                     )}
 
-                                    <strong>
+                                </div>
+
+
+                                {/* INFORMAÇÕES */}
+
+                                <div className="evento-card-content">
+
+                                    <h3>
                                         {evento.nomeEvento}
-                                    </strong>
+                                    </h3>
 
-                                    <div>
-                                        Data: {evento.data}
+
+                                    <div className="evento-info">
+
+                                        <span>
+                                            📅{" "}
+                                            {formatarData(
+                                                evento.data
+                                            )}
+                                        </span>
+
+                                        <span>
+                                            🕐{" "}
+                                            {formatarHora(
+                                                evento.hora
+                                            )}
+                                        </span>
+
+                                        <span>
+                                            📍{" "}
+                                            {evento.local}
+                                        </span>
+
+
+                                        {/* ADMINISTRADOR */}
+
+                                        {autenticado &&
+                                            evento.administradorNome && (
+
+                                                <span>
+                                                    👤 Criado por:{" "}
+                                                    {
+                                                        evento.administradorNome
+                                                    }
+                                                </span>
+
+                                            )}
+
                                     </div>
 
-                                    <div>
-                                        Hora: {evento.hora}
-                                    </div>
 
-                                    <div>
-                                        Local: {evento.local}
-                                    </div>
+                                    <span className="evento-details">
+                                        Ver detalhes →
+                                    </span>
 
-                                </button>
+                                </div>
 
-                            </li>
+                            </article>
 
                         ))}
 
-                    </ul>
+                    </div>
+
                 )}
 
         </section>
