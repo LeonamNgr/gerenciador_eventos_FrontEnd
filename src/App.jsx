@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Administradores from "./pages/Administradores";
+import EditarEvento from "./pages/EditarEvento";
 import EventoDetalhes from "./pages/EventoDetalhes";
 import Eventos from "./pages/Eventos";
 import Login from "./pages/Login";
@@ -64,6 +65,11 @@ function App() {
         <Route
           path="/eventos/novo"
           element={<NovoEvento />}
+        />
+
+        <Route
+          path="/eventos/:id/editar"
+          element={<EditarEvento />}
         />
 
         <Route
