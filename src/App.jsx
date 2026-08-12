@@ -1,12 +1,17 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
-import Administradores from "./pages/Administradores";
+import Login from "./pages/Login";
+
 import EditarEvento from "./pages/EditarEvento";
 import EventoDetalhes from "./pages/EventoDetalhes";
 import Eventos from "./pages/Eventos";
-import Login from "./pages/Login";
 import NovoEvento from "./pages/NovoEvento";
+
+import AdministradorDetalhes from "./pages/AdministradorDetalhes";
+import Administradores from "./pages/Administradores";
+import EditarAdministrador from "./pages/EditarAdministrador";
+import NovoAdministrador from "./pages/NovoAdministrador";
 
 import { useAuth } from "./context/AuthContext";
 
@@ -57,6 +62,8 @@ function App() {
           element={<Dashboard />}
         />
 
+        {/* EVENTOS */}
+
         <Route
           path="/eventos"
           element={<Eventos />}
@@ -77,9 +84,26 @@ function App() {
           element={<EventoDetalhes />}
         />
 
+        {/* ADMINISTRADORES */}
+
         <Route
           path="/administradores"
           element={<Administradores />}
+        />
+
+        <Route
+          path="/administradores/novo"
+          element={<NovoAdministrador />}
+        />
+
+        <Route
+          path="/administradores/:id/editar"
+          element={<EditarAdministrador />}
+        />
+
+        <Route
+          path="/administradores/:id"
+          element={<AdministradorDetalhes />}
         />
 
       </Route>
