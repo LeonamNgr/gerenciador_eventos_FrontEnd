@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
     buscarPorNome,
     buscarTodos,
@@ -8,6 +9,7 @@ import {
 function Eventos() {
 
     const navigate = useNavigate();
+    const { autenticado } = useAuth();
 
     const [eventos, setEventos] = useState([]);
     const [nome, setNome] = useState("");
@@ -86,12 +88,14 @@ function Eventos() {
 
             <h2>Eventos</h2>
 
-            <button
-                type="button"
-                onClick={() => navigate("/eventos/novo")}
-            >
-                Novo Evento
-            </button>
+            {autenticado && (
+                <button
+                    type="button"
+                    onClick={() => navigate("/eventos/novo")}
+                >
+                    Novo Evento
+                </button>
+            )}
 
             <form onSubmit={handleBuscar}>
 

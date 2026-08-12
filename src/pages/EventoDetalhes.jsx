@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { buscarPorId, deletar } from "../services/eventoService";
 
 function EventoDetalhes() {
 
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const { autenticado } = useAuth();
 
     const [evento, setEvento] = useState(null);
     const [carregando, setCarregando] = useState(true);
@@ -63,7 +66,9 @@ function EventoDetalhes() {
 
             await deletar(id);
 
-            navigate("/eventos", { replace: true });
+            navigate("/eventos", {
+                replace: true,
+            });
 
         } catch (error) {
 
@@ -94,7 +99,10 @@ function EventoDetalhes() {
         return (
             <section>
                 <h2>Detalhes do evento</h2>
-                <p>Carregando...</p>
+
+                <p>
+                    Carregando...
+                </p>
             </section>
         );
     }
@@ -112,7 +120,7 @@ function EventoDetalhes() {
                     type="button"
                     onClick={() => navigate("/eventos")}
                 >
-                    Voltar
+                    Voltar para eventos
                 </button>
 
             </section>
@@ -130,31 +138,37 @@ function EventoDetalhes() {
                 Voltar para eventos
             </button>
 
-            <button
-                type="button"
-                onClick={() =>
-                    navigate(`/eventos/${id}/editar`)
-                }
-                disabled={excluindo}
-            >
-                Editar evento
-            </button>
+            {autenticado && (
+                <>
+                    <button
+                        type="button"
+                        onClick={() =>
+                            navigate(`/eventos/${id}/editar`)
+                        }
+                        disabled={excluindo}
+                    >
+                        Editar evento
+                    </button>
 
-            <button
-                type="button"
-                onClick={handleDeletar}
-                disabled={excluindo}
-            >
-                {excluindo
-                    ? "Excluindo..."
-                    : "Excluir evento"}
-            </button>
+                    <button
+                        type="button"
+                        onClick={handleDeletar}
+                        disabled={excluindo}
+                    >
+                        {excluindo
+                            ? "Excluindo..."
+                            : "Excluir evento"}
+                    </button>
+                </>
+            )}
 
             {erro && (
                 <p>{erro}</p>
             )}
 
-            <h2>{evento.nomeEvento}</h2>
+            <h2>
+                {evento.nomeEvento}
+            </h2>
 
             {evento.imagem && (
                 <img
