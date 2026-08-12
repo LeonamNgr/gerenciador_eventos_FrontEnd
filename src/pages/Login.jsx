@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { login } from "../services/authService";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
+
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
@@ -19,7 +23,7 @@ function Login() {
 
             await login(email, senha);
 
-            console.log("Login realizado com sucesso.");
+            navigate("/", { replace: true });
 
         } catch (error) {
 
@@ -76,9 +80,7 @@ function Login() {
                 </div>
 
                 {erro && (
-                    <p>
-                        {erro}
-                    </p>
+                    <p>{erro}</p>
                 )}
 
                 <button
