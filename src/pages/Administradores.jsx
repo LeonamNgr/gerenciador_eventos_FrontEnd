@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
     buscarPorNome,
     buscarTodos,
 } from "../services/administradorService";
+
+import "./Administradores.css";
 
 function Administradores() {
 
@@ -43,23 +46,29 @@ function Administradores() {
 
         event.preventDefault();
 
+        const termo = nome.trim();
+
+        if (!termo) {
+
+            await carregarAdministradores();
+
+            return;
+        }
+
         try {
 
             setErro("");
             setCarregando(true);
 
-            if (!nome.trim()) {
-                await carregarAdministradores();
-                return;
-            }
-
-            const dados = await buscarPorNome(nome);
+            const dados = await buscarPorNome(termo);
 
             setAdministradores(dados);
 
         } catch (error) {
 
             console.error(error);
+
+            setAdministradores([]);
 
             setErro(
                 "Não foi possível realizar a busca."
@@ -74,44 +83,90 @@ function Administradores() {
     function limparBusca() {
 
         setNome("");
+
         carregarAdministradores();
     }
 
     useEffect(() => {
+
         carregarAdministradores();
+
     }, []);
 
     return (
-        <section>
+        <section className="administradores-page">
 
-            <h2>Administradores</h2>
+            {/* =========================
+                CABEÇALHO
+            ========================= */}
 
-            <button
-                type="button"
-                onClick={() =>
-                    navigate("/administradores/novo")
-                }
-            >
-                Novo Administrador
-            </button>
+            <div className="administradores-header">
 
-            <form onSubmit={handleBuscar}>
+                <div>
 
-                <input
-                    type="text"
-                    placeholder="Buscar administrador por nome"
-                    value={nome}
-                    onChange={(event) =>
-                        setNome(event.target.value)
+                    <span className="administradores-eyebrow">
+                        ADMINISTRAÇÃO
+                    </span>
+
+                    <h2>
+                        Administradores
+                    </h2>
+
+                    <p>
+                        Gerencie os administradores do sistema.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    className="administradores-primary-button"
+                    onClick={() =>
+                        navigate("/administradores/novo")
                     }
-                />
+                >
+                    + Novo administrador
+                </button>
 
-                <button type="submit">
+            </div>
+
+
+            {/* =========================
+                BUSCA
+            ========================= */}
+
+            <form
+                className="administradores-search"
+                onSubmit={handleBuscar}
+            >
+
+                <div className="administradores-search-input">
+
+                    <span>
+                        🔎
+                    </span>
+
+                    <input
+                        type="text"
+                        placeholder="Buscar administrador por nome..."
+                        value={nome}
+                        onChange={(event) =>
+                            setNome(event.target.value)
+                        }
+                    />
+
+                </div>
+
+                <button
+                    type="submit"
+                    className="administradores-search-button"
+                >
                     Buscar
                 </button>
 
                 <button
                     type="button"
+                    className="administradores-clear-button"
                     onClick={limparBusca}
                 >
                     Limpar
@@ -119,34 +174,82 @@ function Administradores() {
 
             </form>
 
+
+            {/* =========================
+                CARREGANDO
+            ========================= */}
+
             {carregando && (
-                <p>Carregando administradores...</p>
+
+                <div className="administradores-state">
+
+                    <p>
+                        Carregando administradores...
+                    </p>
+
+                </div>
+
             )}
 
+
+            {/* =========================
+                ERRO
+            ========================= */}
+
             {erro && (
-                <p>{erro}</p>
+
+                <div className="administradores-error">
+
+                    {erro}
+
+                </div>
+
             )}
+
+
+            {/* =========================
+                NENHUM ADMINISTRADOR
+            ========================= */}
 
             {!carregando &&
                 !erro &&
                 administradores.length === 0 && (
-                    <p>
-                        Nenhum administrador encontrado.
-                    </p>
+
+                    <div className="administradores-state">
+
+                        <div className="administradores-empty-icon">
+                            👤
+                        </div>
+
+                        <h3>
+                            Nenhum administrador encontrado
+                        </h3>
+
+                        <p>
+                            Tente realizar uma nova busca ou cadastre um administrador.
+                        </p>
+
+                    </div>
+
                 )}
+
+
+            {/* =========================
+                LISTA
+            ========================= */}
 
             {!carregando &&
                 !erro &&
                 administradores.length > 0 && (
 
-                    <ul>
+                    <div className="administradores-grid">
 
-                        {administradores.map((administrador) => (
+                        {administradores.map(
+                            (administrador) => (
 
-                            <li key={administrador.id}>
-
-                                <button
-                                    type="button"
+                                <article
+                                    className="administrador-card"
+                                    key={administrador.id}
                                     onClick={() =>
                                         navigate(
                                             `/administradores/${administrador.id}`
@@ -154,22 +257,44 @@ function Administradores() {
                                     }
                                 >
 
-                                    <strong>
-                                        {administrador.nome}
-                                    </strong>
+                                    {/* AVATAR */}
 
-                                    <div>
-                                        E-mail:{" "}
-                                        {administrador.email}
+                                    <div className="administrador-avatar">
+                                        {administrador.nome
+                                            ?.charAt(0)
+                                            ?.toUpperCase()}
                                     </div>
 
-                                </button>
 
-                            </li>
+                                    {/* DADOS */}
 
-                        ))}
+                                    <div className="administrador-card-content">
 
-                    </ul>
+                                        <h3>
+                                            {administrador.nome}
+                                        </h3>
+
+                                        <span>
+                                            ✉️{" "}
+                                            {administrador.email}
+                                        </span>
+
+                                    </div>
+
+
+                                    {/* SETA */}
+
+                                    <span className="administrador-card-arrow">
+                                        →
+                                    </span>
+
+                                </article>
+
+                            )
+                        )}
+
+                    </div>
+
                 )}
 
         </section>

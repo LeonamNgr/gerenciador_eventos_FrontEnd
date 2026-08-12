@@ -1,0 +1,360 @@
+.editar-administrador-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.editar-administrador-header {
+    margin-bottom: 28px;
+}
+
+.editar-administrador-back {
+    display: block;
+
+    margin-bottom: 28px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.editar-administrador-back:hover {
+    color: var(--primary);
+}
+
+.editar-administrador-back:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.editar-administrador-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+.editar-administrador-header h2 {
+    margin-bottom: 8px;
+
+    color: var(--text);
+
+    font-size: 32px;
+    font-weight: 700;
+
+    letter-spacing: -0.6px;
+}
+
+.editar-administrador-header p {
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.editar-administrador-card {
+    padding: 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================
+   CABEÇALHO DO CARD
+========================= */
+
+.editar-administrador-card-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding-bottom: 24px;
+
+    margin-bottom: 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.editar-administrador-avatar {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eef4ff;
+
+    color: var(--primary);
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.editar-administrador-card-header h3 {
+    margin-bottom: 4px;
+
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.editar-administrador-card-header p {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.editar-administrador-error {
+    margin-bottom: 22px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.editar-administrador-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+.editar-administrador-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.editar-administrador-field label {
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.editar-administrador-field input {
+    width: 100%;
+
+    min-height: 44px;
+
+    box-sizing: border-box;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    outline: none;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.editar-administrador-field input::placeholder {
+    color: #9ca3af;
+}
+
+.editar-administrador-field input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.editar-administrador-field span {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.editar-administrador-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 22px;
+
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.editar-administrador-cancel,
+.editar-administrador-submit {
+    min-height: 42px;
+
+    padding: 0 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.editar-administrador-cancel {
+    border: 1px solid var(--border);
+
+    background: var(--surface);
+
+    color: var(--text);
+}
+
+.editar-administrador-cancel:hover {
+    background: var(--surface-hover);
+}
+
+.editar-administrador-submit {
+    border: 1px solid var(--primary);
+
+    background: var(--primary);
+
+    color: #ffffff;
+}
+
+.editar-administrador-submit:hover {
+    background: var(--primary-hover);
+}
+
+.editar-administrador-cancel:disabled,
+.editar-administrador-submit:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   ESTADOS
+========================= */
+
+.editar-administrador-state {
+    padding: 55px 20px;
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+}
+
+.editar-administrador-state p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.editar-administrador-error-state h2 {
+    margin: 12px 0 8px;
+
+    color: var(--text);
+
+    font-size: 20px;
+}
+
+.editar-administrador-error-icon {
+    font-size: 32px;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 600px) {
+
+    .editar-administrador-page {
+        max-width: 100%;
+    }
+
+    .editar-administrador-header h2 {
+        font-size: 28px;
+    }
+
+    .editar-administrador-card {
+        padding: 20px;
+    }
+
+    .editar-administrador-actions {
+        flex-direction: column-reverse;
+    }
+
+    .editar-administrador-cancel,
+    .editar-administrador-submit {
+        width: 100%;
+    }
+}

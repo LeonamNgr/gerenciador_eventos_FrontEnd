@@ -1,0 +1,411 @@
+.administradores-page {
+    width: 100%;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.administradores-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.administradores-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+}
+
+.administradores-header h2 {
+    margin-bottom: 8px;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+}
+
+.administradores-header p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+
+/* =========================
+   BOTÃO PRINCIPAL
+========================= */
+
+.administradores-primary-button {
+    min-height: 42px;
+    padding: 0 18px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: var(--primary);
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+.administradores-primary-button:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   BUSCA
+========================= */
+
+.administradores-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 28px;
+    padding: 14px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.administradores-search-input {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+
+    min-height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    background: var(--surface);
+}
+
+.administradores-search-input span {
+    margin-right: 8px;
+    font-size: 15px;
+}
+
+.administradores-search-input input {
+    width: 100%;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+.administradores-search-input input::placeholder {
+    color: var(--text-secondary);
+}
+
+
+/* =========================
+   BOTÕES DA BUSCA
+========================= */
+
+.administradores-search-button,
+.administradores-clear-button {
+    min-height: 42px;
+    padding: 0 17px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.administradores-search-button {
+    border: 1px solid var(--primary);
+
+    background: var(--primary);
+    color: #ffffff;
+}
+
+.administradores-search-button:hover {
+    background: var(--primary-hover);
+}
+
+.administradores-clear-button {
+    border: 1px solid var(--border);
+
+    background: var(--surface);
+    color: var(--text);
+}
+
+.administradores-clear-button:hover {
+    background: var(--surface-hover);
+}
+
+
+/* =========================
+   GRID
+========================= */
+
+.administradores-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.administrador-card {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    min-height: 92px;
+
+    padding: 18px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    box-shadow: var(--shadow-sm);
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.administrador-card:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--primary);
+
+    box-shadow: var(--shadow);
+}
+
+
+/* =========================
+   AVATAR
+========================= */
+
+.administrador-avatar {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eef4ff;
+
+    color: var(--primary);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   CONTEÚDO
+========================= */
+
+.administrador-card-content {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.administrador-card-content h3 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 16px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.administrador-card-content span {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================
+   SETA
+========================= */
+
+.administrador-card-arrow {
+    flex-shrink: 0;
+
+    color: var(--primary);
+
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+/* =========================
+   ESTADOS
+========================= */
+
+.administradores-state {
+    padding: 55px 20px;
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+}
+
+.administradores-state p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.administradores-state h3 {
+    margin: 12px 0 8px;
+
+    color: var(--text);
+
+    font-size: 18px;
+}
+
+.administradores-empty-icon {
+    font-size: 32px;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.administradores-error {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 800px) {
+
+    .administradores-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .administradores-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .administradores-search {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .administradores-search-input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .administradores-search-button,
+    .administradores-clear-button {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .administradores-header h2 {
+        font-size: 28px;
+    }
+
+    .administrador-card {
+        padding: 14px;
+    }
+
+    .administrador-avatar {
+        width: 42px;
+        height: 42px;
+    }
+
+    .administrador-card-content h3 {
+        font-size: 14px;
+    }
+
+    .administrador-card-content span {
+        font-size: 12px;
+    }
+}

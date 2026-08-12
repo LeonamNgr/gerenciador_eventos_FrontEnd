@@ -1,0 +1,326 @@
+.administrador-detalhes-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.administrador-detalhes-header {
+    margin-bottom: 28px;
+}
+
+.administrador-detalhes-back {
+    display: block;
+
+    margin-bottom: 28px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.administrador-detalhes-back:hover {
+    color: var(--primary);
+}
+
+.administrador-detalhes-back:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.administrador-detalhes-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+.administrador-detalhes-header h2 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 32px;
+    font-weight: 700;
+
+    letter-spacing: -0.6px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.administrador-detalhes-card {
+    padding: 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================
+   PERFIL
+========================= */
+
+.administrador-detalhes-profile {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    padding-bottom: 26px;
+
+    margin-bottom: 26px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.administrador-detalhes-avatar {
+    width: 64px;
+    height: 64px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #eef4ff;
+
+    color: var(--primary);
+
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.administrador-detalhes-profile h3 {
+    margin-bottom: 5px;
+
+    color: var(--text);
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.administrador-detalhes-profile span {
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   INFORMAÇÕES
+========================= */
+
+.administrador-detalhes-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 26px;
+}
+
+.administrador-detalhes-info-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    padding: 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: var(--surface);
+}
+
+.administrador-detalhes-info-item span {
+    color: var(--text-secondary);
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.8px;
+}
+
+.administrador-detalhes-info-item strong {
+    color: var(--text);
+
+    font-size: 14px;
+
+    word-break: break-word;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.administrador-detalhes-error {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 14px;
+}
+
+.administrador-detalhes-state {
+    padding: 55px 20px;
+
+    text-align: center;
+
+    background: var(--surface);
+
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+}
+
+.administrador-detalhes-state p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.administrador-detalhes-error-state h2 {
+    margin: 12px 0 8px;
+
+    color: var(--text);
+
+    font-size: 20px;
+}
+
+.administrador-detalhes-error-icon {
+    font-size: 32px;
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.administrador-detalhes-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 22px;
+
+    border-top: 1px solid var(--border);
+}
+
+.administrador-detalhes-edit,
+.administrador-detalhes-delete {
+    min-height: 42px;
+
+    padding: 0 18px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.administrador-detalhes-edit {
+    border: 1px solid var(--primary);
+
+    background: var(--primary);
+
+    color: #ffffff;
+}
+
+.administrador-detalhes-edit:hover {
+    background: var(--primary-hover);
+}
+
+.administrador-detalhes-delete {
+    border: 1px solid #dc2626;
+
+    background: transparent;
+
+    color: #dc2626;
+}
+
+.administrador-detalhes-delete:hover {
+    background: #fef2f2;
+}
+
+.administrador-detalhes-edit:disabled,
+.administrador-detalhes-delete:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 600px) {
+
+    .administrador-detalhes-page {
+        max-width: 100%;
+    }
+
+    .administrador-detalhes-header h2 {
+        font-size: 28px;
+    }
+
+    .administrador-detalhes-card {
+        padding: 20px;
+    }
+
+    .administrador-detalhes-info {
+        grid-template-columns: 1fr;
+    }
+
+    .administrador-detalhes-actions {
+        flex-direction: column;
+    }
+
+    .administrador-detalhes-edit,
+    .administrador-detalhes-delete {
+        width: 100%;
+    }
+}
