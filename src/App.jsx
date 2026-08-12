@@ -1,9 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+
 import Layout from "./components/Layout";
-import { useAuth } from "./context/AuthContext";
 import Administradores from "./pages/Administradores";
+import EventoDetalhes from "./pages/EventoDetalhes";
 import Eventos from "./pages/Eventos";
 import Login from "./pages/Login";
+import NovoEvento from "./pages/NovoEvento";
+
+import { useAuth } from "./context/AuthContext";
 
 function RotaProtegida({ children }) {
 
@@ -46,6 +50,7 @@ function App() {
           </RotaProtegida>
         }
       >
+
         <Route
           path="/"
           element={<Dashboard />}
@@ -57,9 +62,20 @@ function App() {
         />
 
         <Route
+          path="/eventos/novo"
+          element={<NovoEvento />}
+        />
+
+        <Route
+          path="/eventos/:id"
+          element={<EventoDetalhes />}
+        />
+
+        <Route
           path="/administradores"
           element={<Administradores />}
         />
+
       </Route>
 
     </Routes>
