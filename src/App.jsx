@@ -44,10 +44,30 @@ function App() {
   return (
     <Routes>
 
+      {/* ROTAS PÚBLICAS */}
+
       <Route
-        path="/login"
-        element={<Login />}
-      />
+        element={<Layout />}
+      >
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/eventos"
+          element={<Eventos />}
+        />
+
+        <Route
+          path="/eventos/:id"
+          element={<EventoDetalhes />}
+        />
+
+      </Route>
+
+      {/* ROTAS PROTEGIDAS */}
 
       <Route
         element={
@@ -62,13 +82,6 @@ function App() {
           element={<Dashboard />}
         />
 
-        {/* EVENTOS */}
-
-        <Route
-          path="/eventos"
-          element={<Eventos />}
-        />
-
         <Route
           path="/eventos/novo"
           element={<NovoEvento />}
@@ -78,13 +91,6 @@ function App() {
           path="/eventos/:id/editar"
           element={<EditarEvento />}
         />
-
-        <Route
-          path="/eventos/:id"
-          element={<EventoDetalhes />}
-        />
-
-        {/* ADMINISTRADORES */}
 
         <Route
           path="/administradores"
@@ -107,6 +113,18 @@ function App() {
         />
 
       </Route>
+
+      {/* ROTA DESCONHECIDA */}
+
+      <Route
+        path="*"
+        element={
+          <Navigate
+            to="/eventos"
+            replace
+          />
+        }
+      />
 
     </Routes>
   );
