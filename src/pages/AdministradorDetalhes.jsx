@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+
 import {
     buscarPorId,
     deletar,
 } from "../services/administradorService";
 
+import "./AdministradorDetalhes.css";
+
 function AdministradorDetalhes() {
 
     const { id } = useParams();
+
     const navigate = useNavigate();
 
     const [administrador, setAdministrador] = useState(null);
@@ -32,10 +36,13 @@ function AdministradorDetalhes() {
                 console.error(error);
 
                 if (error.response?.status === 404) {
+
                     setErro(
                         "Administrador não encontrado."
                     );
+
                 } else {
+
                     setErro(
                         "Não foi possível carregar o administrador."
                     );
@@ -50,6 +57,7 @@ function AdministradorDetalhes() {
         carregarAdministrador();
 
     }, [id]);
+
 
     async function handleDeletar() {
 
@@ -77,18 +85,25 @@ function AdministradorDetalhes() {
             console.error(error);
 
             if (error.response?.status === 400) {
+
                 setErro(
                     "Não é possível excluir este administrador."
                 );
+
             } else if (error.response?.status === 401) {
+
                 setErro(
                     "Sua sessão expirou. Faça login novamente."
                 );
+
             } else if (error.response?.status === 404) {
+
                 setErro(
                     "Administrador não encontrado."
                 );
+
             } else {
+
                 setErro(
                     "Não foi possível excluir o administrador."
                 );
@@ -100,88 +115,222 @@ function AdministradorDetalhes() {
         }
     }
 
+
+    /* =========================
+       CARREGANDO
+    ========================= */
+
     if (carregando) {
 
         return (
-            <section>
-                <h2>Detalhes do administrador</h2>
+            <section className="administrador-detalhes-page">
 
-                <p>
-                    Carregando...
-                </p>
+                <div className="administrador-detalhes-state">
+
+                    <p>
+                        Carregando administrador...
+                    </p>
+
+                </div>
+
             </section>
         );
     }
+
+
+    /* =========================
+       ERRO AO CARREGAR
+    ========================= */
 
     if (erro && !administrador) {
 
         return (
-            <section>
-
-                <h2>Detalhes do administrador</h2>
-
-                <p>{erro}</p>
+            <section className="administrador-detalhes-page">
 
                 <button
                     type="button"
+                    className="administrador-detalhes-back"
                     onClick={() =>
                         navigate("/administradores")
                     }
                 >
-                    Voltar
+                    ← Voltar para administradores
                 </button>
+
+
+                <div className="administrador-detalhes-state administrador-detalhes-error-state">
+
+                    <div className="administrador-detalhes-error-icon">
+                        ⚠️
+                    </div>
+
+                    <h2>
+                        Administrador não encontrado
+                    </h2>
+
+                    <p>
+                        {erro}
+                    </p>
+
+                </div>
 
             </section>
         );
     }
 
+
     return (
-        <section>
+        <section className="administrador-detalhes-page">
 
-            <button
-                type="button"
-                onClick={() =>
-                    navigate("/administradores")
-                }
-                disabled={excluindo}
-            >
-                Voltar para administradores
-            </button>
+            {/* =========================
+                CABEÇALHO
+            ========================= */}
 
-            <button
-                type="button"
-                onClick={() =>
-                    navigate(
-                        `/administradores/${id}/editar`
-                    )
-                }
-                disabled={excluindo}
-            >
-                Editar administrador
-            </button>
+            <div className="administrador-detalhes-header">
 
-            <button
-                type="button"
-                onClick={handleDeletar}
-                disabled={excluindo}
-            >
-                {excluindo
-                    ? "Excluindo..."
-                    : "Excluir administrador"}
-            </button>
+                <button
+                    type="button"
+                    className="administrador-detalhes-back"
+                    onClick={() =>
+                        navigate("/administradores")
+                    }
+                    disabled={excluindo}
+                >
+                    ← Voltar para administradores
+                </button>
 
-            {erro && (
-                <p>{erro}</p>
-            )}
+                <span className="administrador-detalhes-eyebrow">
+                    ADMINISTRAÇÃO
+                </span>
 
-            <h2>
-                {administrador.nome}
-            </h2>
+                <h2>
+                    Detalhes do administrador
+                </h2>
 
-            <p>
-                <strong>E-mail:</strong>{" "}
-                {administrador.email}
-            </p>
+            </div>
+
+
+            {/* =========================
+                CARD
+            ========================= */}
+
+            <article className="administrador-detalhes-card">
+
+                {/* PERFIL */}
+
+                <div className="administrador-detalhes-profile">
+
+                    <div className="administrador-detalhes-avatar">
+
+                        {administrador.nome
+                            ?.charAt(0)
+                            ?.toUpperCase()}
+
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            {administrador.nome}
+                        </h3>
+
+                        <span>
+                            Administrador do sistema
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                {/* DADOS */}
+
+                <div className="administrador-detalhes-info">
+
+                    <div className="administrador-detalhes-info-item">
+
+                        <span>
+                            NOME
+                        </span>
+
+                        <strong>
+                            {administrador.nome}
+                        </strong>
+
+                    </div>
+
+
+                    <div className="administrador-detalhes-info-item">
+
+                        <span>
+                            E-MAIL
+                        </span>
+
+                        <strong>
+                            {administrador.email}
+                        </strong>
+
+                    </div>
+
+
+                    <div className="administrador-detalhes-info-item">
+
+                        <span>
+                            ID
+                        </span>
+
+                        <strong>
+                            {administrador.id}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                {/* ERRO */}
+
+                {erro && (
+
+                    <div className="administrador-detalhes-error">
+                        {erro}
+                    </div>
+
+                )}
+
+
+                {/* AÇÕES */}
+
+                <div className="administrador-detalhes-actions">
+
+                    <button
+                        type="button"
+                        className="administrador-detalhes-edit"
+                        onClick={() =>
+                            navigate(
+                                `/administradores/${id}/editar`
+                            )
+                        }
+                        disabled={excluindo}
+                    >
+                        Editar administrador
+                    </button>
+
+
+                    <button
+                        type="button"
+                        className="administrador-detalhes-delete"
+                        onClick={handleDeletar}
+                        disabled={excluindo}
+                    >
+                        {excluindo
+                            ? "Excluindo..."
+                            : "Excluir administrador"}
+                    </button>
+
+                </div>
+
+            </article>
 
         </section>
     );
