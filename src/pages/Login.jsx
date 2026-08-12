@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Login.css";
 
 function Login() {
 
@@ -23,14 +24,22 @@ function Login() {
 
             await login(email, senha);
 
-            navigate("/", { replace: true });
+            navigate("/dashboard", {
+                replace: true,
+            });
 
         } catch (error) {
 
+            console.error(error);
+
             if (error.response?.status === 401) {
-                setErro("E-mail ou senha inválidos.");
+                setErro(
+                    "E-mail ou senha inválidos."
+                );
             } else {
-                setErro("Não foi possível realizar o login.");
+                setErro(
+                    "Não foi possível realizar o login."
+                );
             }
 
         } finally {
@@ -40,59 +49,114 @@ function Login() {
     }
 
     return (
-        <main>
-            <h1>Gerenciador de Eventos</h1>
+        <main className="login-page">
 
-            <h2>Login</h2>
+            <div className="login-container">
 
-            <form onSubmit={handleSubmit}>
+                <div className="login-brand">
 
-                <div>
-                    <label htmlFor="email">
-                        E-mail
-                    </label>
+                    <span>
+                        GERENCIADOR
+                    </span>
 
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) =>
-                            setEmail(event.target.value)
-                        }
-                        required
-                    />
+                    <h1>
+                        DE EVENTOS
+                    </h1>
+
                 </div>
 
-                <div>
-                    <label htmlFor="senha">
-                        Senha
-                    </label>
+                <div className="login-card">
 
-                    <input
-                        id="senha"
-                        type="password"
-                        value={senha}
-                        onChange={(event) =>
-                            setSenha(event.target.value)
+                    <div className="login-header">
+
+                        <h2>
+                            Entrar
+                        </h2>
+
+                        <p>
+                            Acesse a área administrativa.
+                        </p>
+
+                    </div>
+
+                    <form
+                        className="login-form"
+                        onSubmit={handleSubmit}
+                    >
+
+                        <div className="login-field">
+
+                            <label htmlFor="email">
+                                E-mail
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(event) =>
+                                    setEmail(event.target.value)
+                                }
+                                placeholder="seu@email.com"
+                                autoComplete="email"
+                                required
+                            />
+
+                        </div>
+
+                        <div className="login-field">
+
+                            <label htmlFor="senha">
+                                Senha
+                            </label>
+
+                            <input
+                                id="senha"
+                                type="password"
+                                value={senha}
+                                onChange={(event) =>
+                                    setSenha(event.target.value)
+                                }
+                                placeholder="Digite sua senha"
+                                autoComplete="current-password"
+                                required
+                            />
+
+                        </div>
+
+                        {erro && (
+                            <div className="login-error">
+                                {erro}
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            className="login-button"
+                            disabled={carregando}
+                        >
+                            {carregando
+                                ? "Entrando..."
+                                : "Entrar"}
+                        </button>
+
+                    </form>
+
+                    <button
+                        type="button"
+                        className="login-back-button"
+                        onClick={() =>
+                            navigate("/eventos")
                         }
-                        required
-                    />
+                        disabled={carregando}
+                    >
+                        ← Voltar para eventos
+                    </button>
+
                 </div>
 
-                {erro && (
-                    <p>{erro}</p>
-                )}
+            </div>
 
-                <button
-                    type="submit"
-                    disabled={carregando}
-                >
-                    {carregando
-                        ? "Entrando..."
-                        : "Entrar"}
-                </button>
-
-            </form>
         </main>
     );
 }

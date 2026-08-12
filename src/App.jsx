@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
+
 import Login from "./pages/Login";
 
+import Dashboard from "./pages/Dashboard";
 import EditarEvento from "./pages/EditarEvento";
 import EventoDetalhes from "./pages/EventoDetalhes";
 import Eventos from "./pages/Eventos";
@@ -20,23 +22,15 @@ function RotaProtegida({ children }) {
   const { autenticado } = useAuth();
 
   if (!autenticado) {
-    return <Navigate to="/login" replace />;
+    return (
+      <Navigate
+        to="/login"
+        replace
+      />
+    );
   }
 
   return children;
-}
-
-function Dashboard() {
-
-  return (
-    <section>
-      <h2>Dashboard</h2>
-
-      <p>
-        Bem-vindo ao Gerenciador de Eventos.
-      </p>
-    </section>
-  );
 }
 
 function App() {
@@ -44,15 +38,27 @@ function App() {
   return (
     <Routes>
 
-      {/* ROTAS PÚBLICAS */}
+      {/* =========================
+                LOGIN
+            ========================= */}
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+
+      {/* =========================
+                ÁREA PÚBLICA
+            ========================= */}
 
       <Route
         element={<Layout />}
       >
 
         <Route
-          path="/login"
-          element={<Login />}
+          path="/"
+          element={<Eventos />}
         />
 
         <Route
@@ -67,7 +73,10 @@ function App() {
 
       </Route>
 
-      {/* ROTAS PROTEGIDAS */}
+
+      {/* =========================
+                ÁREA PROTEGIDA
+            ========================= */}
 
       <Route
         element={
@@ -78,7 +87,7 @@ function App() {
       >
 
         <Route
-          path="/"
+          path="/dashboard"
           element={<Dashboard />}
         />
 
@@ -114,13 +123,16 @@ function App() {
 
       </Route>
 
-      {/* ROTA DESCONHECIDA */}
+
+      {/* =========================
+                ROTA DESCONHECIDA
+            ========================= */}
 
       <Route
         path="*"
         element={
           <Navigate
-            to="/eventos"
+            to="/"
             replace
           />
         }
