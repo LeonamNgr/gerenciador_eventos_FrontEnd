@@ -13,6 +13,7 @@ function Layout() {
     const {
         logout,
         autenticado,
+        administrador,
     } = useAuth();
 
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ function Layout() {
                         type="button"
                         className="navbar-brand"
                         onClick={() =>
-                            navigate("/")
+                            navigate("/eventos")
                         }
                     >
 
@@ -136,19 +137,36 @@ function Layout() {
                     </nav>
 
 
-                    {/* LOGIN / LOGOUT */}
+                    {/* USUÁRIO / LOGIN */}
 
                     <div className="navbar-actions">
 
                         {autenticado ? (
 
-                            <button
-                                type="button"
-                                className="navbar-button logout"
-                                onClick={handleLogout}
-                            >
-                                Sair
-                            </button>
+                            <>
+
+                                <div className="navbar-administrador">
+
+                                    <span className="navbar-administrador-icon">
+                                        👤
+                                    </span>
+
+                                    <span className="navbar-administrador-nome">
+                                        {administrador?.nome}
+                                    </span>
+
+                                </div>
+
+
+                                <button
+                                    type="button"
+                                    className="navbar-button logout"
+                                    onClick={handleLogout}
+                                >
+                                    Sair
+                                </button>
+
+                            </>
 
                         ) : (
 

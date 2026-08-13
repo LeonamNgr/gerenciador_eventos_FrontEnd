@@ -13,9 +13,14 @@ function NovoAdministrador() {
         nome: "",
         email: "",
         senha: "",
+        confirmarSenha: "",
     });
 
+    const [mostrarSenha, setMostrarSenha] = useState(false);
+    const [mostrarConfirmacao, setMostrarConfirmacao] = useState(false);
+
     const [erro, setErro] = useState("");
+    const [sucesso, setSucesso] = useState("");
     const [carregando, setCarregando] = useState(false);
 
     function handleChange(event) {
@@ -26,20 +31,52 @@ function NovoAdministrador() {
             ...estadoAnterior,
             [name]: value,
         }));
+
+        setErro("");
+        setSucesso("");
     }
 
     async function handleSubmit(event) {
 
         event.preventDefault();
 
+        setErro("");
+        setSucesso("");
+
+        if (
+            formulario.senha !==
+            formulario.confirmarSenha
+        ) {
+
+            setErro(
+                "A senha e a confirmação da senha não conferem."
+            );
+
+            return;
+        }
+
         try {
 
-            setErro("");
             setCarregando(true);
 
-            await cadastrar(formulario);
+            const dados = {
+                nome: formulario.nome,
+                email: formulario.email,
+                senha: formulario.senha,
+            };
 
-            navigate("/administradores");
+            await cadastrar(dados);
+
+            setFormulario({
+                nome: "",
+                email: "",
+                senha: "",
+                confirmarSenha: "",
+            });
+
+            setSucesso(
+                "Administrador cadastrado com sucesso."
+            );
 
         } catch (error) {
 
@@ -57,6 +94,12 @@ function NovoAdministrador() {
                     "Você não possui autorização para cadastrar um administrador."
                 );
 
+            } else if (error.response?.status === 409) {
+
+                setErro(
+                    "Este e-mail já está cadastrado."
+                );
+
             } else {
 
                 setErro(
@@ -71,198 +114,308 @@ function NovoAdministrador() {
     }
 
     return (
-        <section className="novo-administrador-page">
+        <main className="novo-administrador-page">
 
-            {/* =========================
-                CABEÇALHO
-            ========================= */}
+            <div className="novo-administrador-wrapper">
 
-            <div className="novo-administrador-header">
+                <div className="novo-administrador-brand">
 
-                <button
-                    type="button"
-                    className="novo-administrador-back"
-                    onClick={() =>
-                        navigate("/administradores")
-                    }
-                >
-                    ← Voltar para administradores
-                </button>
-
-                <span className="novo-administrador-eyebrow">
-                    ADMINISTRAÇÃO
-                </span>
-
-                <h2>
-                    Novo administrador
-                </h2>
-
-                <p>
-                    Cadastre um novo administrador para acessar o sistema.
-                </p>
-
-            </div>
-
-
-            {/* =========================
-                FORMULÁRIO
-            ========================= */}
-
-            <div className="novo-administrador-card">
-
-                <div className="novo-administrador-card-header">
-
-                    <div className="novo-administrador-avatar">
-                        👤
+                    <div className="novo-administrador-brand-mark">
+                        GE
                     </div>
 
                     <div>
 
-                        <h3>
-                            Dados do administrador
-                        </h3>
+                        <strong>
+                            Gerenciador de Eventos
+                        </strong>
 
-                        <p>
-                            Preencha os dados abaixo para realizar o cadastro.
-                        </p>
+                        <span>
+                            Administração de eventos
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                {/* =========================
-                    ERRO
-                ========================= */}
-
-                {erro && (
-
-                    <div className="novo-administrador-error">
-                        {erro}
-                    </div>
-
-                )}
-
-
-                <form
-                    className="novo-administrador-form"
-                    onSubmit={handleSubmit}
+                <button
+                    type="button"
+                    className="novo-administrador-back"
+                    onClick={() =>
+                        navigate("/login")
+                    }
+                    disabled={carregando}
                 >
+                    ← Voltar para o login
+                </button>
 
-                    {/* NOME */}
 
-                    <div className="novo-administrador-field">
+                <section className="novo-administrador-card">
 
-                        <label htmlFor="nome">
-                            Nome
-                        </label>
+                    <div className="novo-administrador-header">
 
-                        <input
-                            id="nome"
-                            name="nome"
-                            type="text"
-                            value={formulario.nome}
-                            onChange={handleChange}
-                            maxLength={100}
-                            placeholder="Digite o nome completo"
-                            autoComplete="name"
-                            required
-                        />
-
-                        <span>
-                            Máximo de 100 caracteres.
+                        <span className="novo-administrador-eyebrow">
+                            NOVA CONTA
                         </span>
+
+                        <h1>
+                            Criar administrador
+                        </h1>
+
+                        <p>
+                            Preencha os dados abaixo para criar seu acesso ao sistema.
+                        </p>
 
                     </div>
 
 
-                    {/* E-MAIL */}
+                    {erro && (
 
-                    <div className="novo-administrador-field">
+                        <div className="novo-administrador-message error">
+                            {erro}
+                        </div>
 
-                        <label htmlFor="email">
-                            E-mail
-                        </label>
-
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formulario.email}
-                            onChange={handleChange}
-                            maxLength={100}
-                            placeholder="exemplo@email.com"
-                            autoComplete="email"
-                            required
-                        />
-
-                        <span>
-                            Será utilizado para acessar o sistema.
-                        </span>
-
-                    </div>
+                    )}
 
 
-                    {/* SENHA */}
+                    {sucesso && (
 
-                    <div className="novo-administrador-field">
+                        <div className="novo-administrador-success">
 
-                        <label htmlFor="senha">
-                            Senha
-                        </label>
+                            <div className="novo-administrador-success-icon">
+                                ✓
+                            </div>
 
-                        <input
-                            id="senha"
-                            name="senha"
-                            type="password"
-                            value={formulario.senha}
-                            onChange={handleChange}
-                            minLength={8}
-                            maxLength={20}
-                            placeholder="Digite a senha"
-                            autoComplete="new-password"
-                            required
-                        />
+                            <div>
 
-                        <span>
-                            A senha deve possuir entre 8 e 20 caracteres.
-                        </span>
+                                <strong>
+                                    Cadastro realizado
+                                </strong>
 
-                    </div>
+                                <p>
+                                    {sucesso}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    )}
 
 
-                    {/* BOTÕES */}
+                    {!sucesso && (
 
-                    <div className="novo-administrador-actions">
-
-                        <button
-                            type="button"
-                            className="novo-administrador-cancel"
-                            onClick={() =>
-                                navigate("/administradores")
-                            }
-                            disabled={carregando}
+                        <form
+                            className="novo-administrador-form"
+                            onSubmit={handleSubmit}
                         >
-                            Cancelar
-                        </button>
 
-                        <button
-                            type="submit"
-                            className="novo-administrador-submit"
-                            disabled={carregando}
-                        >
-                            {carregando
-                                ? "Cadastrando..."
-                                : "Cadastrar administrador"}
-                        </button>
+                            <div className="novo-administrador-field">
 
-                    </div>
+                                <label htmlFor="nome">
+                                    Nome do Administrador
+                                </label>
 
-                </form>
+                                <input
+                                    id="nome"
+                                    name="nome"
+                                    type="text"
+                                    value={formulario.nome}
+                                    onChange={handleChange}
+                                    maxLength={100}
+                                    placeholder="Digite seu nome"
+                                    required
+                                    autoComplete="name"
+                                />
+
+                            </div>
+
+
+                            <div className="novo-administrador-field">
+
+                                <label htmlFor="email">
+                                    E-mail
+                                </label>
+
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={formulario.email}
+                                    onChange={handleChange}
+                                    maxLength={100}
+                                    placeholder="Digite seu e-mail"
+                                    required
+                                    autoComplete="email"
+                                />
+
+                            </div>
+
+
+                            <div className="novo-administrador-field">
+
+                                <label htmlFor="senha">
+                                    Senha
+                                </label>
+
+                                <div className="novo-administrador-password">
+
+                                    <input
+                                        id="senha"
+                                        name="senha"
+                                        type={
+                                            mostrarSenha
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        value={formulario.senha}
+                                        onChange={handleChange}
+                                        minLength={8}
+                                        maxLength={20}
+                                        placeholder="Crie uma senha"
+                                        required
+                                        autoComplete="new-password"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        className="novo-administrador-password-toggle"
+                                        onClick={() =>
+                                            setMostrarSenha(
+                                                !mostrarSenha
+                                            )
+                                        }
+                                        aria-label={
+                                            mostrarSenha
+                                                ? "Ocultar senha"
+                                                : "Mostrar senha"
+                                        }
+                                    >
+                                        {mostrarSenha
+                                            ? "Ocultar"
+                                            : "Mostrar"}
+                                    </button>
+
+                                </div>
+
+                                <span>
+                                    A senha deve possuir entre 8 e 20 caracteres.
+                                </span>
+
+                            </div>
+
+
+                            <div className="novo-administrador-field">
+
+                                <label htmlFor="confirmarSenha">
+                                    Confirmar Senha
+                                </label>
+
+                                <div className="novo-administrador-password">
+
+                                    <input
+                                        id="confirmarSenha"
+                                        name="confirmarSenha"
+                                        type={
+                                            mostrarConfirmacao
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        value={
+                                            formulario.confirmarSenha
+                                        }
+                                        onChange={handleChange}
+                                        minLength={8}
+                                        maxLength={20}
+                                        placeholder="Digite a senha novamente"
+                                        required
+                                        autoComplete="new-password"
+                                    />
+
+                                    <button
+                                        type="button"
+                                        className="novo-administrador-password-toggle"
+                                        onClick={() =>
+                                            setMostrarConfirmacao(
+                                                !mostrarConfirmacao
+                                            )
+                                        }
+                                        aria-label={
+                                            mostrarConfirmacao
+                                                ? "Ocultar confirmação"
+                                                : "Mostrar confirmação"
+                                        }
+                                    >
+                                        {mostrarConfirmacao
+                                            ? "Ocultar"
+                                            : "Mostrar"}
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div className="novo-administrador-actions">
+
+                                <button
+                                    type="button"
+                                    className="novo-administrador-cancel"
+                                    onClick={() =>
+                                        navigate("/login")
+                                    }
+                                    disabled={carregando}
+                                >
+                                    Cancelar
+                                </button>
+
+
+                                <button
+                                    type="submit"
+                                    className="novo-administrador-submit"
+                                    disabled={carregando}
+                                >
+                                    {carregando
+                                        ? "Cadastrando..."
+                                        : "Criar administrador"}
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    )}
+
+
+                    {sucesso && (
+
+                        <div className="novo-administrador-success-actions">
+
+                            <button
+                                type="button"
+                                className="novo-administrador-submit"
+                                onClick={() =>
+                                    navigate("/login")
+                                }
+                            >
+                                Ir para o login
+                            </button>
+
+                        </div>
+
+                    )}
+
+                </section>
+
+
+                <p className="novo-administrador-footer">
+                    © 2026 Gerenciador de Eventos
+                </p>
 
             </div>
 
-        </section>
+        </main>
     );
 }
 
