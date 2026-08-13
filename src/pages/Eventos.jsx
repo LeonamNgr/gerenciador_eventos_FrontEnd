@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import {
+    buscarPagina,
     buscarPorId,
-    buscarPorNome,
-    buscarTodos,
     cadastrar,
 } from "../services/eventoService";
 
@@ -22,13 +21,44 @@ function Eventos() {
 
     const { autenticado } = useAuth();
 
+    /*
+     * =========================
+     * EVENTOS
+     * =========================
+     */
+
     const [eventos, setEventos] = useState([]);
+
     const [nome, setNome] = useState("");
+
     const [carregando, setCarregando] = useState(true);
+
     const [erro, setErro] = useState("");
 
+
+    /*
+     * =========================
+     * PAGINAÇÃO
+     * =========================
+     */
+
+    const [paginaAtual, setPaginaAtual] = useState(0);
+
+    const [totalPaginas, setTotalPaginas] = useState(0);
+
+    const TAMANHO_PAGINA = 6;
+
+
+    /*
+     * =========================
+     * MODAL
+     * =========================
+     */
+
     const [modalAberto, setModalAberto] = useState(false);
+
     const [salvando, setSalvando] = useState(false);
+
     const [erroCadastro, setErroCadastro] = useState("");
 
     const [formulario, setFormulario] = useState({
@@ -41,26 +71,77 @@ function Eventos() {
     });
 
 
-    /* =========================
-       CARREGAR EVENTOS
-    ========================= */
+    /*
+     * =========================
+     * CARREGAR EVENTOS
+     * =========================
+     */
 
-    async function carregarEventos() {
+    async function carregarEventos(
+        pagina = 0,
+        termo = ""
+    ) {
 
         try {
 
             setErro("");
+
             setCarregando(true);
 
-            const dados = await buscarTodos();
+            const dados = await buscarPagina(
+                pagina,
+                TAMANHO_PAGINA,
+                "data",
+                termo.trim()
+            );
+
+            console.log(
+                "Resposta da paginação:",
+                dados
+            );
 
             setEventos(
-                ordenarPorData(dados)
+                dados.content || []
+            );
+
+            setPaginaAtual(
+                dados.number ?? pagina
+            );
+
+            setTotalPaginas(
+                dados.totalPages ?? 0
             );
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "ERRO AO CARREGAR EVENTOS:",
+                error
+            );
+
+            console.error(
+                "STATUS:",
+                error.response?.status
+            );
+
+            console.error(
+                "RESPOSTA:",
+                error.response?.data
+            );
+
+            console.error(
+                "URL:",
+                error.config?.url
+            );
+
+            console.error(
+                "PARAMETROS:",
+                error.config?.params
+            );
+
+            setEventos([]);
+
+            setTotalPaginas(0);
 
             setErro(
                 "Não foi possível carregar os eventos."
@@ -73,38 +154,11 @@ function Eventos() {
     }
 
 
-    /* =========================
-       ORDENAR POR DATA
-    ========================= */
-
-    function ordenarPorData(lista) {
-
-        return [...lista].sort((a, b) => {
-
-            if (!a.data) {
-                return 1;
-            }
-
-            if (!b.data) {
-                return -1;
-            }
-
-            const dataA = new Date(
-                `${a.data}T00:00:00`
-            );
-
-            const dataB = new Date(
-                `${b.data}T00:00:00`
-            );
-
-            return dataA - dataB;
-        });
-    }
-
-
-    /* =========================
-       BUSCAR
-    ========================= */
+    /*
+     * =========================
+     * BUSCAR
+     * =========================
+     */
 
     async function handleBuscar(event) {
 
@@ -112,78 +166,165 @@ function Eventos() {
 
         const termo = nome.trim();
 
+
+        /*
+         * Busca vazia
+         */
+
         if (!termo) {
 
-            await carregarEventos();
+            setPaginaAtual(0);
+
+            await carregarEventos(
+                0,
+                ""
+            );
 
             return;
         }
 
-        try {
 
-            setErro("");
-            setCarregando(true);
+        /*
+         * Busca por ID
+         */
 
-            if (/^\d+$/.test(termo)) {
+        if (/^\d+$/.test(termo)) {
 
-                const dados = await buscarPorId(termo);
+            try {
 
-                setEventos(
-                    ordenarPorData([dados])
+                setErro("");
+
+                setCarregando(true);
+
+                const evento = await buscarPorId(
+                    termo
                 );
 
-                return;
-            }
+                setEventos([
+                    evento,
+                ]);
 
-            const dados = await buscarPorNome(termo);
+                setPaginaAtual(0);
 
-            setEventos(
-                ordenarPorData(dados)
-            );
+                setTotalPaginas(1);
 
-        } catch (error) {
+            } catch (error) {
 
-            console.error(error);
+                console.error(
+                    "ERRO AO BUSCAR EVENTO POR ID:",
+                    error
+                );
 
-            if (error.response?.status === 404) {
+                console.error(
+                    "STATUS:",
+                    error.response?.status
+                );
+
+                console.error(
+                    "RESPOSTA:",
+                    error.response?.data
+                );
 
                 setEventos([]);
 
-                setErro(
-                    "Nenhum evento encontrado."
-                );
+                setPaginaAtual(0);
 
-            } else {
+                setTotalPaginas(0);
 
-                setEventos([]);
+                if (
+                    error.response?.status === 404
+                ) {
 
-                setErro(
-                    "Não foi possível realizar a busca."
-                );
+                    setErro(
+                        "Nenhum evento encontrado."
+                    );
+
+                } else {
+
+                    setErro(
+                        "Não foi possível realizar a busca."
+                    );
+                }
+
+            } finally {
+
+                setCarregando(false);
             }
 
-        } finally {
-
-            setCarregando(false);
+            return;
         }
+
+
+        /*
+         * Busca por nome
+         */
+
+        setPaginaAtual(0);
+
+        await carregarEventos(
+            0,
+            termo
+        );
     }
 
 
-    /* =========================
-       LIMPAR BUSCA
-    ========================= */
+    /*
+     * =========================
+     * LIMPAR BUSCA
+     * =========================
+     */
 
-    function limparBusca() {
+    async function limparBusca() {
 
         setNome("");
 
-        carregarEventos();
+        setPaginaAtual(0);
+
+        await carregarEventos(
+            0,
+            ""
+        );
     }
 
 
-    /* =========================
-       ABRIR MODAL
-    ========================= */
+    /*
+     * =========================
+     * MUDAR PÁGINA
+     * =========================
+     */
+
+    async function mudarPagina(
+        novaPagina
+    ) {
+
+        if (novaPagina < 0) {
+            return;
+        }
+
+        if (
+            totalPaginas > 0 &&
+            novaPagina >= totalPaginas
+        ) {
+            return;
+        }
+
+        await carregarEventos(
+            novaPagina,
+            nome
+        );
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }
+
+
+    /*
+     * =========================
+     * ABRIR MODAL
+     * =========================
+     */
 
     function abrirModal() {
 
@@ -202,9 +343,11 @@ function Eventos() {
     }
 
 
-    /* =========================
-       FECHAR MODAL
-    ========================= */
+    /*
+     * =========================
+     * FECHAR MODAL
+     * =========================
+     */
 
     function fecharModal() {
 
@@ -213,30 +356,40 @@ function Eventos() {
         }
 
         setModalAberto(false);
+
         setErroCadastro("");
     }
 
 
-    /* =========================
-       ALTERAR FORMULÁRIO
-    ========================= */
+    /*
+     * =========================
+     * ALTERAR FORMULÁRIO
+     * =========================
+     */
 
     function handleChange(event) {
 
-        const { name, value } = event.target;
+        const {
+            name,
+            value,
+        } = event.target;
 
-        setFormulario((estadoAnterior) => ({
-            ...estadoAnterior,
-            [name]: value,
-        }));
+        setFormulario(
+            (estadoAnterior) => ({
+                ...estadoAnterior,
+                [name]: value,
+            })
+        );
 
         setErroCadastro("");
     }
 
 
-    /* =========================
-       CADASTRAR EVENTO
-    ========================= */
+    /*
+     * =========================
+     * CADASTRAR EVENTO
+     * =========================
+     */
 
     async function handleCadastrar(event) {
 
@@ -245,9 +398,12 @@ function Eventos() {
         try {
 
             setErroCadastro("");
+
             setSalvando(true);
 
-            await cadastrar(formulario);
+            await cadastrar(
+                formulario
+            );
 
             setModalAberto(false);
 
@@ -260,19 +416,43 @@ function Eventos() {
                 imagem: "",
             });
 
-            await carregarEventos();
+            /*
+             * Recarrega a página atual.
+             */
+
+            await carregarEventos(
+                paginaAtual,
+                nome
+            );
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "ERRO AO CADASTRAR EVENTO:",
+                error
+            );
 
-            if (error.response?.status === 400) {
+            console.error(
+                "STATUS:",
+                error.response?.status
+            );
+
+            console.error(
+                "RESPOSTA:",
+                error.response?.data
+            );
+
+            if (
+                error.response?.status === 400
+            ) {
 
                 setErroCadastro(
                     "Verifique os dados informados."
                 );
 
-            } else if (error.response?.status === 401) {
+            } else if (
+                error.response?.status === 401
+            ) {
 
                 setErroCadastro(
                     "Sua sessão expirou. Faça login novamente."
@@ -292,19 +472,25 @@ function Eventos() {
     }
 
 
-    /* =========================
-       CARREGAMENTO INICIAL
-    ========================= */
+    /*
+     * =========================
+     * CARREGAMENTO INICIAL
+     * =========================
+     */
 
     useEffect(() => {
 
-        carregarEventos();
+        carregarEventos(
+            0,
+            ""
+        );
 
     }, []);
 
 
     return (
         <section className="eventos-page">
+
 
             {/* =========================
                 CABEÇALHO
@@ -364,7 +550,9 @@ function Eventos() {
                         placeholder="Buscar por nome ou ID..."
                         value={nome}
                         onChange={(event) =>
-                            setNome(event.target.value)
+                            setNome(
+                                event.target.value
+                            )
                         }
                     />
 
@@ -448,7 +636,7 @@ function Eventos() {
 
 
             {/* =========================
-                LISTA DE EVENTOS
+                EVENTOS
             ========================= */}
 
             {!carregando &&
@@ -457,98 +645,177 @@ function Eventos() {
 
                     <div className="eventos-grid">
 
-                        {eventos.map((evento) => (
+                        {eventos.map(
+                            (evento) => (
 
-                            <article
-                                className="evento-card"
-                                key={evento.id}
-                                onClick={() =>
-                                    navigate(
-                                        `/eventos/${evento.id}`
-                                    )
-                                }
-                            >
+                                <article
+                                    className="evento-card"
+                                    key={evento.id}
+                                    onClick={() =>
+                                        navigate(
+                                            `/eventos/${evento.id}`
+                                        )
+                                    }
+                                >
 
-                                {/* IMAGEM */}
+                                    {/* IMAGEM */}
 
-                                <div className="evento-image-wrapper">
+                                    <div className="evento-image-wrapper">
 
-                                    {evento.imagem ? (
+                                        {evento.imagem ? (
 
-                                        <img
-                                            src={evento.imagem}
-                                            alt={`Imagem do evento ${evento.nomeEvento}`}
-                                            className="evento-image"
-                                        />
+                                            <img
+                                                src={
+                                                    evento.imagem
+                                                }
+                                                alt={`Imagem do evento ${evento.nomeEvento}`}
+                                                className="evento-image"
+                                            />
 
-                                    ) : (
+                                        ) : (
 
-                                        <div className="evento-image-placeholder">
-
-                                            <span>
-                                                Sem imagem
-                                            </span>
-
-                                        </div>
-
-                                    )}
-
-                                </div>
-
-
-                                {/* INFORMAÇÕES */}
-
-                                <div className="evento-card-content">
-
-                                    <h3>
-                                        {evento.nomeEvento}
-                                    </h3>
-
-
-                                    <div className="evento-info">
-
-                                        <span>
-                                            📅{" "}
-                                            {formatarData(
-                                                evento.data
-                                            )}
-                                        </span>
-
-                                        <span>
-                                            🕐{" "}
-                                            {formatarHora(
-                                                evento.hora
-                                            )}
-                                        </span>
-
-                                        <span>
-                                            📍{" "}
-                                            {evento.local}
-                                        </span>
-
-
-                                        {autenticado &&
-                                            evento.administradorNome && (
+                                            <div className="evento-image-placeholder">
 
                                                 <span>
-                                                    👤 Criado por:{" "}
-                                                    {evento.administradorNome}
+                                                    Sem imagem
                                                 </span>
 
-                                            )}
+                                            </div>
+
+                                        )}
 
                                     </div>
 
 
-                                    <span className="evento-details">
-                                        Ver detalhes →
-                                    </span>
+                                    {/* CONTEÚDO */}
 
-                                </div>
+                                    <div className="evento-card-content">
 
-                            </article>
+                                        <h3>
+                                            {
+                                                evento.nomeEvento
+                                            }
+                                        </h3>
 
-                        ))}
+
+                                        <div className="evento-info">
+
+                                            <span>
+                                                📅{" "}
+                                                {
+                                                    formatarData(
+                                                        evento.data
+                                                    )
+                                                }
+                                            </span>
+
+                                            <span>
+                                                🕐{" "}
+                                                {
+                                                    formatarHora(
+                                                        evento.hora
+                                                    )
+                                                }
+                                            </span>
+
+                                            <span>
+                                                📍{" "}
+                                                {
+                                                    evento.local
+                                                }
+                                            </span>
+
+
+                                            {autenticado &&
+                                                evento.administradorNome && (
+
+                                                    <span>
+                                                        👤 Criado por:{" "}
+                                                        {
+                                                            evento.administradorNome
+                                                        }
+                                                    </span>
+
+                                                )}
+
+                                        </div>
+
+
+                                        <span className="evento-details">
+                                            Ver detalhes →
+                                        </span>
+
+                                    </div>
+
+                                </article>
+
+                            )
+                        )}
+
+                    </div>
+
+                )}
+
+
+            {/* =========================
+                PAGINAÇÃO
+            ========================= */}
+
+            {!carregando &&
+                !erro &&
+                eventos.length > 0 &&
+                totalPaginas > 1 && (
+
+                    <div className="eventos-paginacao">
+
+                        <button
+                            type="button"
+                            className="eventos-paginacao-button"
+                            onClick={() =>
+                                mudarPagina(
+                                    paginaAtual - 1
+                                )
+                            }
+                            disabled={
+                                paginaAtual === 0
+                            }
+                        >
+                            ← Anterior
+                        </button>
+
+
+                        <span className="eventos-paginacao-info">
+
+                            Página{" "}
+
+                            <strong>
+                                {paginaAtual + 1}
+                            </strong>
+
+                            {" "}de{" "}
+
+                            <strong>
+                                {totalPaginas}
+                            </strong>
+
+                        </span>
+
+
+                        <button
+                            type="button"
+                            className="eventos-paginacao-button"
+                            onClick={() =>
+                                mudarPagina(
+                                    paginaAtual + 1
+                                )
+                            }
+                            disabled={
+                                paginaAtual >=
+                                totalPaginas - 1
+                            }
+                        >
+                            Próxima →
+                        </button>
 
                     </div>
 
@@ -556,7 +823,7 @@ function Eventos() {
 
 
             {/* ==================================================
-                MODAL - NOVO EVENTO
+                MODAL
             ================================================== */}
 
             {modalAberto && (
@@ -572,6 +839,7 @@ function Eventos() {
                             event.stopPropagation()
                         }
                     >
+
 
                         {/* CABEÇALHO */}
 
@@ -607,7 +875,7 @@ function Eventos() {
                         </div>
 
 
-                        {/* ERRO */}
+                        {/* ERRO DO CADASTRO */}
 
                         {erroCadastro && (
 
@@ -624,8 +892,13 @@ function Eventos() {
 
                         <form
                             className="evento-modal-form"
-                            onSubmit={handleCadastrar}
+                            onSubmit={
+                                handleCadastrar
+                            }
                         >
+
+
+                            {/* NOME */}
 
                             <div className="evento-modal-field">
 
@@ -637,8 +910,12 @@ function Eventos() {
                                     id="modal-nomeEvento"
                                     name="nomeEvento"
                                     type="text"
-                                    value={formulario.nomeEvento}
-                                    onChange={handleChange}
+                                    value={
+                                        formulario.nomeEvento
+                                    }
+                                    onChange={
+                                        handleChange
+                                    }
                                     maxLength={200}
                                     required
                                     autoFocus
@@ -646,6 +923,8 @@ function Eventos() {
 
                             </div>
 
+
+                            {/* DATA E HORA */}
 
                             <div className="evento-modal-row">
 
@@ -659,8 +938,12 @@ function Eventos() {
                                         id="modal-data"
                                         name="data"
                                         type="date"
-                                        value={formulario.data}
-                                        onChange={handleChange}
+                                        value={
+                                            formulario.data
+                                        }
+                                        onChange={
+                                            handleChange
+                                        }
                                         required
                                     />
 
@@ -677,8 +960,12 @@ function Eventos() {
                                         id="modal-hora"
                                         name="hora"
                                         type="time"
-                                        value={formulario.hora}
-                                        onChange={handleChange}
+                                        value={
+                                            formulario.hora
+                                        }
+                                        onChange={
+                                            handleChange
+                                        }
                                         required
                                     />
 
@@ -686,6 +973,8 @@ function Eventos() {
 
                             </div>
 
+
+                            {/* LOCAL */}
 
                             <div className="evento-modal-field">
 
@@ -697,14 +986,20 @@ function Eventos() {
                                     id="modal-local"
                                     name="local"
                                     type="text"
-                                    value={formulario.local}
-                                    onChange={handleChange}
+                                    value={
+                                        formulario.local
+                                    }
+                                    onChange={
+                                        handleChange
+                                    }
                                     maxLength={200}
                                     required
                                 />
 
                             </div>
 
+
+                            {/* DESCRIÇÃO */}
 
                             <div className="evento-modal-field">
 
@@ -715,14 +1010,20 @@ function Eventos() {
                                 <textarea
                                     id="modal-descricao"
                                     name="descricao"
-                                    value={formulario.descricao}
-                                    onChange={handleChange}
+                                    value={
+                                        formulario.descricao
+                                    }
+                                    onChange={
+                                        handleChange
+                                    }
                                     maxLength={2000}
                                     required
                                 />
 
                             </div>
 
+
+                            {/* IMAGEM */}
 
                             <div className="evento-modal-field">
 
@@ -734,8 +1035,12 @@ function Eventos() {
                                     id="modal-imagem"
                                     name="imagem"
                                     type="url"
-                                    value={formulario.imagem}
-                                    onChange={handleChange}
+                                    value={
+                                        formulario.imagem
+                                    }
+                                    onChange={
+                                        handleChange
+                                    }
                                     maxLength={500}
                                     placeholder="https://..."
                                 />
@@ -754,8 +1059,12 @@ function Eventos() {
                                 <button
                                     type="button"
                                     className="evento-modal-cancel"
-                                    onClick={fecharModal}
-                                    disabled={salvando}
+                                    onClick={
+                                        fecharModal
+                                    }
+                                    disabled={
+                                        salvando
+                                    }
                                 >
                                     Cancelar
                                 </button>
@@ -764,7 +1073,9 @@ function Eventos() {
                                 <button
                                     type="submit"
                                     className="evento-modal-submit"
-                                    disabled={salvando}
+                                    disabled={
+                                        salvando
+                                    }
                                 >
                                     {salvando
                                         ? "Cadastrando..."

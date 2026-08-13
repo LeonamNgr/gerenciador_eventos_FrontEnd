@@ -685,3 +685,128 @@
     }
 
 }
+
+/* =========================================================
+   PAGINAÇÃO
+   ========================================================= */
+
+.eventos-paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    width: 100%;
+    margin-top: 36px;
+    padding: 8px 0 12px;
+}
+
+.eventos-paginacao-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 118px;
+    height: 42px;
+
+    padding: 0 18px;
+
+    border: 1px solid #d9dee8;
+    border-radius: 10px;
+
+    background: #ffffff;
+    color: #2458d6;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.eventos-paginacao-button:hover:not(:disabled) {
+    background: #f4f7ff;
+    border-color: #2864e8;
+
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.12);
+
+    transform: translateY(-1px);
+}
+
+.eventos-paginacao-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.eventos-paginacao-button:disabled {
+    background: #f5f6f8;
+    border-color: #e5e7eb;
+    color: #b8bec9;
+
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.eventos-paginacao-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 125px;
+    height: 42px;
+
+    padding: 0 16px;
+
+    border-radius: 10px;
+
+    background: #f7f9fc;
+    border: 1px solid #e5e9f0;
+
+    color: #667085;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.eventos-paginacao-info strong {
+    margin: 0 4px;
+
+    color: #1d2939;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAGINAÇÃO — RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .eventos-paginacao {
+        gap: 8px;
+        margin-top: 28px;
+    }
+
+    .eventos-paginacao-button {
+        min-width: auto;
+        height: 40px;
+
+        padding: 0 12px;
+
+        font-size: 13px;
+    }
+
+    .eventos-paginacao-info {
+        min-width: auto;
+        height: 40px;
+
+        padding: 0 10px;
+
+        font-size: 13px;
+    }
+}
