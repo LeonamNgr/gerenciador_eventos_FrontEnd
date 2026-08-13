@@ -13,7 +13,7 @@ import {
 
 import { useAuth } from "../context/AuthContext";
 
-import "./Dashboard.css";
+import "../styles/Dashboard.css";
 
 function Dashboard() {
 

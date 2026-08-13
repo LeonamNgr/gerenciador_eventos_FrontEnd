@@ -6,7 +6,7 @@ import {
     editar,
 } from "../services/administradorService";
 
-import "./EditarAdministrador.css";
+import "../styles/EditarAdministrador.css";
 
 function EditarAdministrador() {
 

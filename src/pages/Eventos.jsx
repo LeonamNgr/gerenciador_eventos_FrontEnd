@@ -13,7 +13,7 @@ import {
     formatarHora,
 } from "../utils/formatadores";
 
-import "./Eventos.css";
+import "../styles/Eventos.css";
 
 function Eventos() {
 

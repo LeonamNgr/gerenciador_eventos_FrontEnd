@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { cadastrar } from "../services/eventoService";
 
-import "./NovoEvento.css";
+import "../styles/NovoEvento.css";
 
 function NovoEvento() {
 
