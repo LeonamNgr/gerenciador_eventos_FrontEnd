@@ -13,7 +13,9 @@ import NovoEvento from "./pages/NovoEvento";
 import AdministradorDetalhes from "./pages/AdministradorDetalhes";
 import Administradores from "./pages/Administradores";
 import EditarAdministrador from "./pages/EditarAdministrador";
+import EsqueciSenha from "./pages/EsqueciSenha";
 import NovoAdministrador from "./pages/NovoAdministrador";
+import SolicitacoesSenha from "./pages/SolicitacoesSenha";
 
 import { useAuth } from "./context/AuthContext";
 
@@ -55,7 +57,12 @@ function App() {
           path="/login"
           element={<Login />}
         />
+        {/* ESQUECI MINHA SENHA */}
 
+        <Route
+          path="/esqueci-senha"
+          element={<EsqueciSenha />}
+        />
 
         {/* EVENTOS */}
 
@@ -133,6 +140,12 @@ function App() {
         <Route
           path="/administradores/:id"
           element={<AdministradorDetalhes />}
+        />
+        {/* SOLICITAÇÕES DE SENHA */}
+
+        <Route
+          path="/solicitacoes-senha"
+          element={<SolicitacoesSenha />}
         />
 
       </Route>
