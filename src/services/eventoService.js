@@ -43,3 +43,21 @@ export async function contarMeusEventos() {
 
     return response.data;
 }
+
+export async function buscarPagina(
+    page = 0,
+    size = 6,
+    sort = "nomeEvento",
+    nome = ""
+) {
+    const response = await api.get("/eventos/pagina", {
+        params: {
+            page,
+            size,
+            sort,
+            ...(nome && { nome }),
+        },
+    });
+
+    return response.data;
+}
