@@ -1,6 +1,12 @@
-import { createContext, useContext, useState } from "react";
+import {
+    createContext,
+    useContext,
+    useState,
+} from "react";
+
 import {
     estaAutenticado,
+    obterAdministrador,
     login as realizarLogin,
     logout as realizarLogout,
 } from "../services/authService";
@@ -13,11 +19,25 @@ export function AuthProvider({ children }) {
         estaAutenticado()
     );
 
+    const [administrador, setAdministrador] = useState(
+        obterAdministrador()
+    );
+
     async function login(email, senha) {
 
-        const response = await realizarLogin(email, senha);
+        const response =
+            await realizarLogin(
+                email,
+                senha
+            );
 
         setAutenticado(true);
+
+        setAdministrador({
+            id: response.administradorId,
+            nome: response.administradorNome,
+            email: response.administradorEmail,
+        });
 
         return response;
     }
@@ -27,12 +47,15 @@ export function AuthProvider({ children }) {
         realizarLogout();
 
         setAutenticado(false);
+
+        setAdministrador(null);
     }
 
     return (
         <AuthContext.Provider
             value={{
                 autenticado,
+                administrador,
                 login,
                 logout,
             }}
@@ -44,9 +67,11 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
 
-    const context = useContext(AuthContext);
+    const context =
+        useContext(AuthContext);
 
     if (!context) {
+
         throw new Error(
             "useAuth deve ser utilizado dentro de um AuthProvider."
         );

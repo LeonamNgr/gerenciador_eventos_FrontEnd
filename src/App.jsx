@@ -22,6 +22,7 @@ function RotaProtegida({ children }) {
   const { autenticado } = useAuth();
 
   if (!autenticado) {
+
     return (
       <Navigate
         to="/login"
@@ -71,6 +72,11 @@ function App() {
           element={<EventoDetalhes />}
         />
 
+        <Route
+          path="/administradores/novo"
+          element={<NovoAdministrador />}
+        />
+
       </Route>
 
 
@@ -104,11 +110,6 @@ function App() {
         <Route
           path="/administradores"
           element={<Administradores />}
-        />
-
-        <Route
-          path="/administradores/novo"
-          element={<NovoAdministrador />}
         />
 
         <Route
