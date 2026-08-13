@@ -17,6 +17,7 @@ import NovoAdministrador from "./pages/NovoAdministrador";
 
 import { useAuth } from "./context/AuthContext";
 
+
 function RotaProtegida({ children }) {
 
   const { autenticado } = useAuth();
@@ -34,20 +35,11 @@ function RotaProtegida({ children }) {
   return children;
 }
 
+
 function App() {
 
   return (
     <Routes>
-
-      {/* =========================
-                LOGIN
-            ========================= */}
-
-      <Route
-        path="/login"
-        element={<Login />}
-      />
-
 
       {/* =========================
                 ÁREA PÚBLICA
@@ -56,6 +48,16 @@ function App() {
       <Route
         element={<Layout />}
       >
+
+        {/* LOGIN */}
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+
+        {/* EVENTOS */}
 
         <Route
           path="/"
@@ -71,6 +73,9 @@ function App() {
           path="/eventos/:id"
           element={<EventoDetalhes />}
         />
+
+
+        {/* CADASTRO PÚBLICO */}
 
         <Route
           path="/administradores/novo"
@@ -92,10 +97,15 @@ function App() {
         }
       >
 
+        {/* DASHBOARD */}
+
         <Route
           path="/dashboard"
           element={<Dashboard />}
         />
+
+
+        {/* EVENTOS */}
 
         <Route
           path="/eventos/novo"
@@ -106,6 +116,9 @@ function App() {
           path="/eventos/:id/editar"
           element={<EditarEvento />}
         />
+
+
+        {/* ADMINISTRADORES */}
 
         <Route
           path="/administradores"
@@ -142,5 +155,6 @@ function App() {
     </Routes>
   );
 }
+
 
 export default App;

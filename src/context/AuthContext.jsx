@@ -33,11 +33,9 @@ export function AuthProvider({ children }) {
 
         setAutenticado(true);
 
-        setAdministrador({
-            id: response.administradorId,
-            nome: response.administradorNome,
-            email: response.administradorEmail,
-        });
+        setAdministrador(
+            response.administrador
+        );
 
         return response;
     }
