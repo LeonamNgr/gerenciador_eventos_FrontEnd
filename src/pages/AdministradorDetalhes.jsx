@@ -6,7 +6,7 @@ import {
     deletar,
 } from "../services/administradorService";
 
-import "./AdministradorDetalhes.css";
+import "../styles/AdministradorDetalhes.css";
 
 function AdministradorDetalhes() {
 

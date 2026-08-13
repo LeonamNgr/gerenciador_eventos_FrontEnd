@@ -6,7 +6,7 @@ import {
     buscarTodos,
 } from "../services/administradorService";
 
-import "./Administradores.css";
+import "../styles/Administradores.css";
 
 function Administradores() {
 

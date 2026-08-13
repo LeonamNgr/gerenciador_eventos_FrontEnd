@@ -6,7 +6,7 @@ import {
     editar,
 } from "../services/eventoService";
 
-import "./EditarEvento.css";
+import "../styles/EditarEvento.css";
 
 function EditarEvento() {
 

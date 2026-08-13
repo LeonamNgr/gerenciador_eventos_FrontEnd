@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { cadastrar } from "../services/administradorService";
 
-import "./NovoAdministrador.css";
+import "../styles/NovoAdministrador.css";
 
 function NovoAdministrador() {
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
-import "./Login.css";
+import "../styles/Login.css";
 
 const EMAIL_SALVO_KEY = "login_email";
 const SENHA_SALVA_KEY = "login_senha";

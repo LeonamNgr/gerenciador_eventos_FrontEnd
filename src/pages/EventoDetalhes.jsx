@@ -16,7 +16,7 @@ import {
     formatarHora,
 } from "../utils/formatadores";
 
-import "./EventoDetalhes.css";
+import "../styles/EventoDetalhes.css";
 
 function EventoDetalhes() {
 
