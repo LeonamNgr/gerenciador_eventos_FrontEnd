@@ -1,5 +1,6 @@
 import api from "./api";
 
+
 export async function buscarTodos() {
 
     const response =
@@ -28,6 +29,30 @@ export async function buscarPorNome(nome) {
             {
                 params: {
                     nome,
+                },
+            }
+        );
+
+    return response.data;
+}
+
+
+export async function buscarPagina(
+    page = 0,
+    size = 6,
+    sort = "nome",
+    nome = ""
+) {
+
+    const response =
+        await api.get(
+            "/administradores/pagina",
+            {
+                params: {
+                    page,
+                    size,
+                    sort,
+                    ...(nome && { nome }),
                 },
             }
         );
