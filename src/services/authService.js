@@ -9,9 +9,7 @@ export async function login(email, senha) {
 
     const {
         token,
-        administradorId,
-        administradorNome,
-        administradorEmail,
+        administrador,
     } = response.data;
 
     localStorage.setItem(
@@ -21,15 +19,12 @@ export async function login(email, senha) {
 
     localStorage.setItem(
         "administrador",
-        JSON.stringify({
-            id: administradorId,
-            nome: administradorNome,
-            email: administradorEmail,
-        })
+        JSON.stringify(administrador)
     );
 
     return response.data;
 }
+
 
 export function logout() {
 
@@ -40,10 +35,12 @@ export function logout() {
     );
 }
 
+
 export function obterToken() {
 
     return localStorage.getItem("token");
 }
+
 
 export function obterAdministrador() {
 
@@ -72,6 +69,7 @@ export function obterAdministrador() {
         return null;
     }
 }
+
 
 export function estaAutenticado() {
 

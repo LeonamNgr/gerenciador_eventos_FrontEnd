@@ -6,6 +6,7 @@ import {
     buscarPorId,
     buscarPorNome,
     buscarTodos,
+    cadastrar,
 } from "../services/eventoService";
 
 import {
@@ -26,29 +27,23 @@ function Eventos() {
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
 
-    function ordenarPorData(lista) {
+    const [modalAberto, setModalAberto] = useState(false);
+    const [salvando, setSalvando] = useState(false);
+    const [erroCadastro, setErroCadastro] = useState("");
 
-        return [...lista].sort((a, b) => {
+    const [formulario, setFormulario] = useState({
+        nomeEvento: "",
+        data: "",
+        hora: "",
+        local: "",
+        descricao: "",
+        imagem: "",
+    });
 
-            if (!a.data) {
-                return 1;
-            }
 
-            if (!b.data) {
-                return -1;
-            }
-
-            const dataA = new Date(
-                `${a.data}T00:00:00`
-            );
-
-            const dataB = new Date(
-                `${b.data}T00:00:00`
-            );
-
-            return dataA - dataB;
-        });
-    }
+    /* =========================
+       CARREGAR EVENTOS
+    ========================= */
 
     async function carregarEventos() {
 
@@ -77,6 +72,40 @@ function Eventos() {
         }
     }
 
+
+    /* =========================
+       ORDENAR POR DATA
+    ========================= */
+
+    function ordenarPorData(lista) {
+
+        return [...lista].sort((a, b) => {
+
+            if (!a.data) {
+                return 1;
+            }
+
+            if (!b.data) {
+                return -1;
+            }
+
+            const dataA = new Date(
+                `${a.data}T00:00:00`
+            );
+
+            const dataB = new Date(
+                `${b.data}T00:00:00`
+            );
+
+            return dataA - dataB;
+        });
+    }
+
+
+    /* =========================
+       BUSCAR
+    ========================= */
+
     async function handleBuscar(event) {
 
         event.preventDefault();
@@ -95,10 +124,6 @@ function Eventos() {
             setErro("");
             setCarregando(true);
 
-            /*
-             * Se o usuário digitou somente números,
-             * a busca será realizada pelo ID.
-             */
             if (/^\d+$/.test(termo)) {
 
                 const dados = await buscarPorId(termo);
@@ -110,10 +135,6 @@ function Eventos() {
                 return;
             }
 
-            /*
-             * Caso contrário,
-             * a busca será realizada pelo nome.
-             */
             const dados = await buscarPorNome(termo);
 
             setEventos(
@@ -147,6 +168,11 @@ function Eventos() {
         }
     }
 
+
+    /* =========================
+       LIMPAR BUSCA
+    ========================= */
+
     function limparBusca() {
 
         setNome("");
@@ -154,11 +180,128 @@ function Eventos() {
         carregarEventos();
     }
 
+
+    /* =========================
+       ABRIR MODAL
+    ========================= */
+
+    function abrirModal() {
+
+        setErroCadastro("");
+
+        setFormulario({
+            nomeEvento: "",
+            data: "",
+            hora: "",
+            local: "",
+            descricao: "",
+            imagem: "",
+        });
+
+        setModalAberto(true);
+    }
+
+
+    /* =========================
+       FECHAR MODAL
+    ========================= */
+
+    function fecharModal() {
+
+        if (salvando) {
+            return;
+        }
+
+        setModalAberto(false);
+        setErroCadastro("");
+    }
+
+
+    /* =========================
+       ALTERAR FORMULÁRIO
+    ========================= */
+
+    function handleChange(event) {
+
+        const { name, value } = event.target;
+
+        setFormulario((estadoAnterior) => ({
+            ...estadoAnterior,
+            [name]: value,
+        }));
+
+        setErroCadastro("");
+    }
+
+
+    /* =========================
+       CADASTRAR EVENTO
+    ========================= */
+
+    async function handleCadastrar(event) {
+
+        event.preventDefault();
+
+        try {
+
+            setErroCadastro("");
+            setSalvando(true);
+
+            await cadastrar(formulario);
+
+            setModalAberto(false);
+
+            setFormulario({
+                nomeEvento: "",
+                data: "",
+                hora: "",
+                local: "",
+                descricao: "",
+                imagem: "",
+            });
+
+            await carregarEventos();
+
+        } catch (error) {
+
+            console.error(error);
+
+            if (error.response?.status === 400) {
+
+                setErroCadastro(
+                    "Verifique os dados informados."
+                );
+
+            } else if (error.response?.status === 401) {
+
+                setErroCadastro(
+                    "Sua sessão expirou. Faça login novamente."
+                );
+
+            } else {
+
+                setErroCadastro(
+                    "Não foi possível cadastrar o evento."
+                );
+            }
+
+        } finally {
+
+            setSalvando(false);
+        }
+    }
+
+
+    /* =========================
+       CARREGAMENTO INICIAL
+    ========================= */
+
     useEffect(() => {
 
         carregarEventos();
 
     }, []);
+
 
     return (
         <section className="eventos-page">
@@ -185,14 +328,13 @@ function Eventos() {
 
                 </div>
 
+
                 {autenticado && (
 
                     <button
                         type="button"
                         className="evento-primary-button"
-                        onClick={() =>
-                            navigate("/eventos/novo")
-                        }
+                        onClick={abrirModal}
                     >
                         + Novo evento
                     </button>
@@ -228,12 +370,14 @@ function Eventos() {
 
                 </div>
 
+
                 <button
                     type="submit"
                     className="search-button"
                 >
                     Buscar
                 </button>
+
 
                 <button
                     type="button"
@@ -383,16 +527,12 @@ function Eventos() {
                                         </span>
 
 
-                                        {/* ADMINISTRADOR */}
-
                                         {autenticado &&
                                             evento.administradorNome && (
 
                                                 <span>
                                                     👤 Criado por:{" "}
-                                                    {
-                                                        evento.administradorNome
-                                                    }
+                                                    {evento.administradorNome}
                                                 </span>
 
                                             )}
@@ -413,6 +553,233 @@ function Eventos() {
                     </div>
 
                 )}
+
+
+            {/* ==================================================
+                MODAL - NOVO EVENTO
+            ================================================== */}
+
+            {modalAberto && (
+
+                <div
+                    className="evento-modal-overlay"
+                    onClick={fecharModal}
+                >
+
+                    <div
+                        className="evento-modal"
+                        onClick={(event) =>
+                            event.stopPropagation()
+                        }
+                    >
+
+                        {/* CABEÇALHO */}
+
+                        <div className="evento-modal-header">
+
+                            <div>
+
+                                <span className="evento-modal-eyebrow">
+                                    NOVO CADASTRO
+                                </span>
+
+                                <h3>
+                                    Adicionar evento
+                                </h3>
+
+                                <p>
+                                    Preencha os dados do evento.
+                                </p>
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                className="evento-modal-close"
+                                onClick={fecharModal}
+                                disabled={salvando}
+                                aria-label="Fechar"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+
+                        {/* ERRO */}
+
+                        {erroCadastro && (
+
+                            <div className="evento-modal-error">
+
+                                {erroCadastro}
+
+                            </div>
+
+                        )}
+
+
+                        {/* FORMULÁRIO */}
+
+                        <form
+                            className="evento-modal-form"
+                            onSubmit={handleCadastrar}
+                        >
+
+                            <div className="evento-modal-field">
+
+                                <label htmlFor="modal-nomeEvento">
+                                    Nome do evento
+                                </label>
+
+                                <input
+                                    id="modal-nomeEvento"
+                                    name="nomeEvento"
+                                    type="text"
+                                    value={formulario.nomeEvento}
+                                    onChange={handleChange}
+                                    maxLength={200}
+                                    required
+                                    autoFocus
+                                />
+
+                            </div>
+
+
+                            <div className="evento-modal-row">
+
+                                <div className="evento-modal-field">
+
+                                    <label htmlFor="modal-data">
+                                        Data
+                                    </label>
+
+                                    <input
+                                        id="modal-data"
+                                        name="data"
+                                        type="date"
+                                        value={formulario.data}
+                                        onChange={handleChange}
+                                        required
+                                    />
+
+                                </div>
+
+
+                                <div className="evento-modal-field">
+
+                                    <label htmlFor="modal-hora">
+                                        Hora
+                                    </label>
+
+                                    <input
+                                        id="modal-hora"
+                                        name="hora"
+                                        type="time"
+                                        value={formulario.hora}
+                                        onChange={handleChange}
+                                        required
+                                    />
+
+                                </div>
+
+                            </div>
+
+
+                            <div className="evento-modal-field">
+
+                                <label htmlFor="modal-local">
+                                    Local
+                                </label>
+
+                                <input
+                                    id="modal-local"
+                                    name="local"
+                                    type="text"
+                                    value={formulario.local}
+                                    onChange={handleChange}
+                                    maxLength={200}
+                                    required
+                                />
+
+                            </div>
+
+
+                            <div className="evento-modal-field">
+
+                                <label htmlFor="modal-descricao">
+                                    Descrição
+                                </label>
+
+                                <textarea
+                                    id="modal-descricao"
+                                    name="descricao"
+                                    value={formulario.descricao}
+                                    onChange={handleChange}
+                                    maxLength={2000}
+                                    required
+                                />
+
+                            </div>
+
+
+                            <div className="evento-modal-field">
+
+                                <label htmlFor="modal-imagem">
+                                    URL da imagem
+                                </label>
+
+                                <input
+                                    id="modal-imagem"
+                                    name="imagem"
+                                    type="url"
+                                    value={formulario.imagem}
+                                    onChange={handleChange}
+                                    maxLength={500}
+                                    placeholder="https://..."
+                                />
+
+                                <span>
+                                    Campo opcional.
+                                </span>
+
+                            </div>
+
+
+                            {/* AÇÕES */}
+
+                            <div className="evento-modal-actions">
+
+                                <button
+                                    type="button"
+                                    className="evento-modal-cancel"
+                                    onClick={fecharModal}
+                                    disabled={salvando}
+                                >
+                                    Cancelar
+                                </button>
+
+
+                                <button
+                                    type="submit"
+                                    className="evento-modal-submit"
+                                    disabled={salvando}
+                                >
+                                    {salvando
+                                        ? "Cadastrando..."
+                                        : "Cadastrar evento"}
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            )}
 
         </section>
     );
