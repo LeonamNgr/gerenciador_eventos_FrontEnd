@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { buscarTodos } from "../services/eventoService";
+import {
+    buscarTodos,
+    contarMeusEventos,
+} from "../services/eventoService";
 
 import {
     formatarData,
@@ -19,20 +22,45 @@ function Dashboard() {
     const { autenticado } = useAuth();
 
     const [eventos, setEventos] = useState([]);
+    const [meusEventos, setMeusEventos] = useState(0);
+
     const [carregando, setCarregando] = useState(true);
+    const [carregandoMeusEventos, setCarregandoMeusEventos] =
+        useState(true);
+
     const [erro, setErro] = useState("");
+
 
     useEffect(() => {
 
-        async function carregarEventos() {
+        async function carregarDashboard() {
 
             try {
 
                 setErro("");
 
+                /*
+                 * Carrega todos os eventos públicos
+                 * para os indicadores gerais e a
+                 * lista de próximos eventos.
+                 */
                 const dados = await buscarTodos();
 
                 setEventos(dados);
+
+
+                /*
+                 * Carrega a quantidade de eventos
+                 * cadastrados pelo administrador
+                 * autenticado.
+                 */
+                if (autenticado) {
+
+                    const quantidade =
+                        await contarMeusEventos();
+
+                    setMeusEventos(quantidade);
+                }
 
             } catch (error) {
 
@@ -45,12 +73,14 @@ function Dashboard() {
             } finally {
 
                 setCarregando(false);
+                setCarregandoMeusEventos(false);
             }
         }
 
-        carregarEventos();
+        carregarDashboard();
 
-    }, []);
+    }, [autenticado]);
+
 
     /*
      * Data atual sem considerar horário.
@@ -63,6 +93,7 @@ function Dashboard() {
 
         return hoje;
     }
+
 
     /*
      * Converte a data recebida pela API.
@@ -78,7 +109,9 @@ function Dashboard() {
         );
     }
 
+
     const hoje = obterDataHoje();
+
 
     /*
      * Eventos futuros.
@@ -106,6 +139,7 @@ function Dashboard() {
             return dataA - dataB;
         });
 
+
     /*
      * Eventos que acontecem hoje.
      */
@@ -124,12 +158,14 @@ function Dashboard() {
         );
     });
 
+
     /*
      * Apenas os 5 próximos eventos
      * são exibidos na lista.
      */
     const proximosEventosExibidos =
         proximosEventos.slice(0, 5);
+
 
     return (
         <section className="dashboard-page">
@@ -155,6 +191,7 @@ function Dashboard() {
                     </p>
 
                 </div>
+
 
                 <button
                     type="button"
@@ -188,7 +225,9 @@ function Dashboard() {
 
             <div className="dashboard-stats">
 
-                {/* TOTAL */}
+                {/* =========================
+                    TOTAL
+                ========================= */}
 
                 <div className="dashboard-stat-card">
 
@@ -215,7 +254,9 @@ function Dashboard() {
                 </div>
 
 
-                {/* PRÓXIMOS */}
+                {/* =========================
+                    PRÓXIMOS
+                ========================= */}
 
                 <div className="dashboard-stat-card">
 
@@ -242,7 +283,9 @@ function Dashboard() {
                 </div>
 
 
-                {/* HOJE */}
+                {/* =========================
+                    HOJE
+                ========================= */}
 
                 <div className="dashboard-stat-card">
 
@@ -264,6 +307,36 @@ function Dashboard() {
 
                     <span className="dashboard-stat-description">
                         eventos acontecendo hoje
+                    </span>
+
+                </div>
+
+
+                {/* =========================
+                    MEUS EVENTOS
+                ========================= */}
+
+                <div className="dashboard-stat-card">
+
+                    <div className="dashboard-stat-icon">
+                        👤
+                    </div>
+
+                    <span className="dashboard-stat-label">
+                        MEUS EVENTOS
+                    </span>
+
+                    <strong className="dashboard-stat-value">
+
+                        {!autenticado ||
+                            carregandoMeusEventos
+                            ? "..."
+                            : meusEventos}
+
+                    </strong>
+
+                    <span className="dashboard-stat-description">
+                        eventos cadastrados por você
                     </span>
 
                 </div>
@@ -291,6 +364,7 @@ function Dashboard() {
 
                     </div>
 
+
                     <button
                         type="button"
                         className="dashboard-secondary-button"
@@ -304,7 +378,9 @@ function Dashboard() {
                 </div>
 
 
-                {/* CARREGANDO */}
+                {/* =========================
+                    CARREGANDO
+                ========================= */}
 
                 {carregando && (
 
@@ -319,7 +395,9 @@ function Dashboard() {
                 )}
 
 
-                {/* NENHUM EVENTO */}
+                {/* =========================
+                    NENHUM EVENTO
+                ========================= */}
 
                 {!carregando &&
                     !erro &&
@@ -338,6 +416,7 @@ function Dashboard() {
                             <p>
                                 Não existem eventos futuros cadastrados.
                             </p>
+
 
                             {autenticado && (
 
@@ -360,7 +439,9 @@ function Dashboard() {
                     )}
 
 
-                {/* LISTA */}
+                {/* =========================
+                    LISTA
+                ========================= */}
 
                 {!carregando &&
                     !erro &&
@@ -382,7 +463,9 @@ function Dashboard() {
                                         }
                                     >
 
-                                        {/* IMAGEM */}
+                                        {/* =========================
+                                            IMAGEM
+                                        ========================= */}
 
                                         <div className="dashboard-event-image">
 
@@ -404,7 +487,9 @@ function Dashboard() {
                                         </div>
 
 
-                                        {/* CONTEÚDO */}
+                                        {/* =========================
+                                            CONTEÚDO
+                                        ========================= */}
 
                                         <div className="dashboard-event-content">
 
@@ -449,7 +534,9 @@ function Dashboard() {
                                         </div>
 
 
-                                        {/* SETA */}
+                                        {/* =========================
+                                            SETA
+                                        ========================= */}
 
                                         <span className="dashboard-event-arrow">
                                             →

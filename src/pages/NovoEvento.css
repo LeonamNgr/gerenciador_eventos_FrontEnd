@@ -1,0 +1,400 @@
+/* =========================
+   PÁGINA
+========================= */
+
+.novo-evento-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.novo-evento-header {
+    margin-bottom: 28px;
+}
+
+.novo-evento-back {
+    margin-bottom: 28px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.novo-evento-back:hover {
+    color: var(--primary);
+}
+
+.novo-evento-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+.novo-evento-header h2 {
+    margin: 0 0 8px;
+
+    color: var(--text);
+
+    font-size: 32px;
+    font-weight: 700;
+
+    letter-spacing: -0.6px;
+}
+
+.novo-evento-header p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.novo-evento-card {
+    padding: 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================
+   CABEÇALHO DO CARD
+========================= */
+
+.novo-evento-card-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.novo-evento-avatar {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--primary-light);
+
+    font-size: 20px;
+}
+
+.novo-evento-card-header h3 {
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.novo-evento-card-header p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.novo-evento-error {
+    margin-bottom: 22px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.novo-evento-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================
+   LINHA
+========================= */
+
+.novo-evento-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+
+/* =========================
+   CAMPO
+========================= */
+
+.novo-evento-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.novo-evento-field label {
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.novo-evento-field input,
+.novo-evento-field textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    outline: none;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.novo-evento-field input {
+    height: 46px;
+
+    padding: 0 13px;
+}
+
+.novo-evento-field textarea {
+    min-height: 120px;
+
+    padding: 12px 13px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+.novo-evento-field input::placeholder,
+.novo-evento-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+.novo-evento-field input:focus,
+.novo-evento-field textarea:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.novo-evento-field span {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.novo-evento-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 20px;
+
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.novo-evento-cancel,
+.novo-evento-submit {
+    min-height: 42px;
+
+    padding: 0 20px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+/* =========================
+   CANCELAR
+========================= */
+
+.novo-evento-cancel {
+    border: 1px solid var(--border);
+
+    background: var(--surface);
+
+    color: var(--text);
+}
+
+.novo-evento-cancel:hover {
+    background: var(--surface-hover);
+}
+
+
+/* =========================
+   CADASTRAR
+========================= */
+
+.novo-evento-submit {
+    border: 1px solid var(--primary);
+
+    background: var(--primary);
+
+    color: #ffffff;
+}
+
+.novo-evento-submit:hover {
+    background: var(--primary-hover);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   DESABILITADO
+========================= */
+
+.novo-evento-cancel:disabled,
+.novo-evento-submit:disabled,
+.novo-evento-back:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 700px) {
+
+    .novo-evento-page {
+        max-width: 100%;
+    }
+
+    .novo-evento-header h2 {
+        font-size: 28px;
+    }
+
+    .novo-evento-card {
+        padding: 22px;
+    }
+
+    .novo-evento-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .novo-evento-card {
+        padding: 18px;
+    }
+
+    .novo-evento-card-header {
+        align-items: flex-start;
+    }
+
+    .novo-evento-actions {
+        flex-direction: column-reverse;
+    }
+
+    .novo-evento-cancel,
+    .novo-evento-submit {
+        width: 100%;
+    }
+}
