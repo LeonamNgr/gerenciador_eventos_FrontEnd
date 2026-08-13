@@ -37,3 +37,9 @@ export async function editar(id, evento) {
 export async function deletar(id) {
     await api.delete(`/eventos/${id}`);
 }
+
+export async function contarMeusEventos() {
+    const response = await api.get("/eventos/meus/count");
+
+    return response.data;
+}

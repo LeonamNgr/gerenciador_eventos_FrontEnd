@@ -1,0 +1,504 @@
+/* =========================
+   PÁGINA
+========================= */
+
+.editar-evento-page {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.editar-evento-header {
+    margin-bottom: 28px;
+}
+
+.editar-evento-back {
+    margin-bottom: 28px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--text-secondary);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        color 0.15s ease;
+}
+
+.editar-evento-back:hover {
+    color: var(--primary);
+}
+
+.editar-evento-back:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.editar-evento-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    letter-spacing: 1.2px;
+}
+
+.editar-evento-header h2 {
+    margin: 0 0 8px;
+
+    color: var(--text);
+
+    font-size: 32px;
+    font-weight: 700;
+
+    letter-spacing: -0.6px;
+}
+
+.editar-evento-header p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   CARD
+========================= */
+
+.editar-evento-card {
+    padding: 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+/* =========================
+   CABEÇALHO DO CARD
+========================= */
+
+.editar-evento-card-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.editar-evento-avatar {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--primary-light);
+
+    font-size: 20px;
+}
+
+.editar-evento-card-header h3 {
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.editar-evento-card-header p {
+    margin: 0;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   ERRO
+========================= */
+
+.editar-evento-error {
+    margin-bottom: 22px;
+
+    padding: 12px 14px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+
+/* =========================
+   FORMULÁRIO
+========================= */
+
+.editar-evento-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================
+   LINHA
+========================= */
+
+.editar-evento-row {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+
+/* =========================
+   CAMPO
+========================= */
+
+.editar-evento-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+.editar-evento-field label {
+    color: var(--text);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.editar-evento-field input,
+.editar-evento-field textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid var(--border);
+    border-radius: 8px;
+
+    outline: none;
+
+    background: var(--surface);
+
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 14px;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.editar-evento-field input {
+    height: 46px;
+
+    padding: 0 13px;
+}
+
+.editar-evento-field textarea {
+    min-height: 120px;
+
+    padding: 12px 13px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+.editar-evento-field input:focus,
+.editar-evento-field textarea:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.editar-evento-field input::placeholder,
+.editar-evento-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+.editar-evento-field span {
+    color: var(--text-secondary);
+
+    font-size: 12px;
+}
+
+
+/* =========================
+   AÇÕES
+========================= */
+
+.editar-evento-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    padding-top: 20px;
+
+    margin-top: 4px;
+
+    border-top: 1px solid var(--border);
+}
+
+.editar-evento-cancel,
+.editar-evento-submit {
+    min-height: 42px;
+
+    padding: 0 20px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+/* =========================
+   CANCELAR
+========================= */
+
+.editar-evento-cancel {
+    border: 1px solid var(--border);
+
+    background: var(--surface);
+
+    color: var(--text);
+}
+
+.editar-evento-cancel:hover {
+    background: var(--surface-hover);
+}
+
+
+/* =========================
+   SALVAR
+========================= */
+
+.editar-evento-submit {
+    border: 1px solid var(--primary);
+
+    background: var(--primary);
+
+    color: #ffffff;
+}
+
+.editar-evento-submit:hover {
+    background: var(--primary-hover);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   DESABILITADO
+========================= */
+
+.editar-evento-cancel:disabled,
+.editar-evento-submit:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================
+   CARREGAMENTO
+========================= */
+
+.editar-evento-loading {
+    min-height: 240px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 14px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+.editar-evento-spinner {
+    width: 30px;
+    height: 30px;
+
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+
+    border-radius: 50%;
+
+    animation: editar-evento-spin 0.8s linear infinite;
+}
+
+@keyframes editar-evento-spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================
+   ESTADO DE ERRO
+========================= */
+
+.editar-evento-error-state {
+    min-height: 260px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.editar-evento-error-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 16px;
+
+    border-radius: 50%;
+
+    background: #fef2f2;
+
+    color: var(--danger);
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.editar-evento-error-state h3 {
+    margin-bottom: 8px;
+
+    color: var(--text);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.editar-evento-error-state p {
+    margin-bottom: 22px;
+
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 700px) {
+
+    .editar-evento-page {
+        max-width: 100%;
+    }
+
+    .editar-evento-header h2 {
+        font-size: 28px;
+    }
+
+    .editar-evento-card {
+        padding: 22px;
+    }
+
+    .editar-evento-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .editar-evento-card {
+        padding: 18px;
+    }
+
+    .editar-evento-card-header {
+        align-items: flex-start;
+    }
+
+    .editar-evento-actions {
+        flex-direction: column-reverse;
+    }
+
+    .editar-evento-cancel,
+    .editar-evento-submit {
+        width: 100%;
+    }
+}
