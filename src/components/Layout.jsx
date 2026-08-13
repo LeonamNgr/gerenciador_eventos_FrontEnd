@@ -129,6 +129,19 @@ function Layout() {
                                 >
                                     Administradores
                                 </button>
+                                <button
+                                    type="button"
+                                    className={
+                                        estaAtivo("/solicitacoes-senha")
+                                            ? "navbar-link active"
+                                            : "navbar-link"
+                                    }
+                                    onClick={() =>
+                                        navigate("/solicitacoes-senha")
+                                    }
+                                >
+                                    Solicitações de senha
+                                </button>
 
                             </>
 

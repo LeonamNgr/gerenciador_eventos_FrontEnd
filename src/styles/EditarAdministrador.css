@@ -358,3 +358,50 @@
         width: 100%;
     }
 }
+
+.campo-senha {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campo-senha>label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.campo-senha-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.campo-senha-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 80px;
+}
+
+.campo-senha-toggle {
+    position: absolute;
+    right: 10px;
+
+    border: none;
+    background: transparent;
+
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.campo-senha-toggle:hover {
+    text-decoration: underline;
+}
+
+.campo-senha-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

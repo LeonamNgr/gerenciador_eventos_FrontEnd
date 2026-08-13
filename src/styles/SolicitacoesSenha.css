@@ -1,0 +1,630 @@
+/* ========================================
+   PÁGINA
+======================================== */
+
+.solicitacoes-senha-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 32px 64px;
+}
+
+
+/* ========================================
+   CABEÇALHO
+======================================== */
+
+.solicitacoes-senha-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.solicitacoes-senha-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.solicitacoes-senha-header h2 {
+    margin: 0;
+    color: #172b4d;
+    font-size: 34px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.solicitacoes-senha-header p {
+    margin: 10px 0 0;
+    color: #64748b;
+    font-size: 16px;
+}
+
+
+/* ========================================
+   BOTÃO ATUALIZAR
+======================================== */
+
+.solicitacoes-senha-refresh {
+    flex-shrink: 0;
+    border: 1px solid #dbe2ea;
+    border-radius: 9px;
+    padding: 11px 18px;
+    background: #ffffff;
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.solicitacoes-senha-refresh:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #f8fafc;
+}
+
+.solicitacoes-senha-refresh:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   ESTADOS
+======================================== */
+
+.solicitacoes-senha-state {
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #ffffff;
+    text-align: center;
+}
+
+.solicitacoes-senha-state p {
+    margin: 0;
+    color: #64748b;
+    font-size: 15px;
+}
+
+.solicitacoes-senha-state h3 {
+    margin: 18px 0 8px;
+    color: #172b4d;
+    font-size: 20px;
+}
+
+.solicitacoes-senha-state p:last-child {
+    max-width: 500px;
+    line-height: 1.6;
+}
+
+.solicitacoes-senha-empty-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ecfdf5;
+    color: #16a34a;
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   ERRO
+======================================== */
+
+.solicitacoes-senha-error {
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   LISTA
+======================================== */
+
+.solicitacoes-senha-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* ========================================
+   CARD
+======================================== */
+
+.solicitacao-senha-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: 0.2s ease;
+}
+
+.solicitacao-senha-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07);
+    transform: translateY(-1px);
+}
+
+
+/* ========================================
+   AVATAR
+======================================== */
+
+.solicitacao-senha-avatar {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   INFORMAÇÕES
+======================================== */
+
+.solicitacao-senha-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.solicitacao-senha-info h3 {
+    margin: 0 0 5px;
+    color: #172b4d;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.solicitacao-senha-info p {
+    margin: 0 0 7px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.solicitacao-senha-info span {
+    display: inline-flex;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* ========================================
+   AÇÃO
+======================================== */
+
+.solicitacao-senha-action button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.solicitacao-senha-action button:hover {
+    background: #1d4ed8;
+}
+
+
+/* ========================================
+   MODAL - FUNDO
+======================================== */
+
+.solicitacoes-senha-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(3px);
+}
+
+
+/* ========================================
+   MODAL
+======================================== */
+
+.solicitacoes-senha-modal {
+    width: 100%;
+    max-width: 480px;
+    max-height: calc(100vh - 48px);
+
+    overflow-y: auto;
+
+    border-radius: 18px;
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 60px rgba(15, 23, 42, 0.22);
+
+    animation: solicitacaoModalEntrada 0.18s ease-out;
+}
+
+@keyframes solicitacaoModalEntrada {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ========================================
+   CABEÇALHO DO MODAL
+======================================== */
+
+.solicitacoes-senha-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 24px 26px 20px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.solicitacoes-senha-modal-header span {
+    display: block;
+    margin-bottom: 6px;
+
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.solicitacoes-senha-modal-header h3 {
+    margin: 0;
+    color: #172b4d;
+    font-size: 21px;
+}
+
+.solicitacoes-senha-modal-header button {
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #64748b;
+
+    font-size: 22px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.solicitacoes-senha-modal-header button:hover {
+    background: #f8fafc;
+    color: #172b4d;
+}
+
+
+/* ========================================
+   USUÁRIO DO MODAL
+======================================== */
+
+.solicitacoes-senha-user {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin: 22px 26px;
+
+    padding: 15px 16px;
+
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.solicitacoes-senha-user strong {
+    color: #172b4d;
+    font-size: 15px;
+}
+
+.solicitacoes-senha-user span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* ========================================
+   FORMULÁRIO
+======================================== */
+
+.solicitacoes-senha-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    padding: 0 26px 26px;
+}
+
+.solicitacoes-senha-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.solicitacoes-senha-field label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.solicitacoes-senha-field input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 12px 13px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #172b4d;
+
+    font-size: 14px;
+
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.solicitacoes-senha-field input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.solicitacoes-senha-field input:disabled {
+    background: #f8fafc;
+}
+
+
+/* ========================================
+   AÇÕES DO MODAL
+======================================== */
+
+.solicitacoes-senha-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 6px;
+    padding-top: 20px;
+
+    border-top: 1px solid #e2e8f0;
+}
+
+.solicitacoes-senha-modal-actions button {
+    border-radius: 9px;
+    padding: 11px 17px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.solicitacoes-senha-modal-actions button:first-child {
+    border: 1px solid #dbe2ea;
+    background: #ffffff;
+    color: #475569;
+}
+
+.solicitacoes-senha-modal-actions button:first-child:hover {
+    background: #f8fafc;
+}
+
+.solicitacoes-senha-modal-actions button:last-child {
+    border: none;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.solicitacoes-senha-modal-actions button:last-child:hover {
+    background: #1d4ed8;
+}
+
+.solicitacoes-senha-modal-actions button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   RESPONSIVO
+======================================== */
+
+@media (max-width: 700px) {
+
+    .solicitacoes-senha-page {
+        padding: 32px 18px 48px;
+    }
+
+    .solicitacoes-senha-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .solicitacoes-senha-header h2 {
+        font-size: 28px;
+    }
+
+    .solicitacoes-senha-refresh {
+        width: 100%;
+    }
+
+    .solicitacao-senha-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .solicitacao-senha-info {
+        width: calc(100% - 70px);
+        flex: none;
+    }
+
+    .solicitacao-senha-action {
+        width: 100%;
+    }
+
+    .solicitacao-senha-action button {
+        width: 100%;
+    }
+
+    .solicitacoes-senha-modal-overlay {
+        padding: 14px;
+    }
+
+    .solicitacoes-senha-modal {
+        max-height: calc(100vh - 28px);
+    }
+
+    .solicitacoes-senha-modal-header {
+        padding: 20px;
+    }
+
+    .solicitacoes-senha-user {
+        margin: 18px 20px;
+    }
+
+    .solicitacoes-senha-form {
+        padding: 0 20px 20px;
+    }
+
+    .solicitacoes-senha-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .solicitacoes-senha-modal-actions button {
+        width: 100%;
+    }
+}
+
+.senha-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.senha-input-container input {
+    padding-right: 80px;
+}
+
+.senha-toggle {
+    position: absolute;
+    right: 10px;
+
+    border: none;
+    background: transparent;
+
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.senha-toggle:hover {
+    text-decoration: underline;
+}
+
+.senha-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.campo-senha {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.campo-senha>label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.campo-senha-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.campo-senha-container input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 80px;
+}
+
+.campo-senha-toggle {
+    position: absolute;
+    right: 10px;
+
+    border: none;
+    background: transparent;
+
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.campo-senha-toggle:hover {
+    text-decoration: underline;
+}
+
+.campo-senha-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
+    alterarSenha,
     buscarPorId,
     editar,
 } from "../services/administradorService";
 
+import { useAuth } from "../context/AuthContext";
+
+import CampoSenha from "../components/CampoSenha";
 import "../styles/EditarAdministrador.css";
 
 function EditarAdministrador() {
@@ -14,15 +18,35 @@ function EditarAdministrador() {
 
     const navigate = useNavigate();
 
+    const { administrador: administradorLogado } = useAuth();
+
+
+    const ehAdministradorLogado =
+        administradorLogado &&
+        String(administradorLogado.id) === String(id);
+
+
     const [formulario, setFormulario] = useState({
         nome: "",
         email: "",
-        senha: "",
     });
+
+
+    const [senhaFormulario, setSenhaFormulario] = useState({
+        senhaAtual: "",
+        novaSenha: "",
+        confirmarNovaSenha: "",
+    });
+
 
     const [carregando, setCarregando] = useState(true);
     const [salvando, setSalvando] = useState(false);
+    const [alterandoSenha, setAlterandoSenha] = useState(false);
+
     const [erro, setErro] = useState("");
+    const [erroSenha, setErroSenha] = useState("");
+    const [sucessoSenha, setSucessoSenha] = useState("");
+
 
     useEffect(() => {
 
@@ -38,7 +62,6 @@ function EditarAdministrador() {
                 setFormulario({
                     nome: administrador.nome ?? "",
                     email: administrador.email ?? "",
-                    senha: "",
                 });
 
             } catch (error) {
@@ -80,6 +103,20 @@ function EditarAdministrador() {
     }
 
 
+    function handleSenhaChange(event) {
+
+        const { name, value } = event.target;
+
+        setSenhaFormulario((estadoAnterior) => ({
+            ...estadoAnterior,
+            [name]: value,
+        }));
+
+        setErroSenha("");
+        setSucessoSenha("");
+    }
+
+
     async function handleSubmit(event) {
 
         event.preventDefault();
@@ -93,16 +130,6 @@ function EditarAdministrador() {
                 nome: formulario.nome,
                 email: formulario.email,
             };
-
-            /*
-             * A senha só é enviada quando
-             * o administrador informou uma nova senha.
-             */
-            if (formulario.senha.trim()) {
-
-                dados.senha =
-                    formulario.senha;
-            }
 
             await editar(id, dados);
 
@@ -132,6 +159,12 @@ function EditarAdministrador() {
                     "Administrador não encontrado."
                 );
 
+            } else if (error.response?.status === 409) {
+
+                setErro(
+                    "Este e-mail já está cadastrado."
+                );
+
             } else {
 
                 setErro(
@@ -142,6 +175,100 @@ function EditarAdministrador() {
         } finally {
 
             setSalvando(false);
+        }
+    }
+
+
+    async function handleAlterarSenha(event) {
+
+        event.preventDefault();
+
+        setErroSenha("");
+        setSucessoSenha("");
+
+        /*
+         * Validação da nova senha
+         */
+        if (
+            senhaFormulario.novaSenha.length < 8 ||
+            senhaFormulario.novaSenha.length > 20
+        ) {
+
+            setErroSenha(
+                "A nova senha deve possuir entre 8 e 20 caracteres."
+            );
+
+            return;
+        }
+
+
+        /*
+         * Confirmação da nova senha
+         */
+        if (
+            senhaFormulario.novaSenha !==
+            senhaFormulario.confirmarNovaSenha
+        ) {
+
+            setErroSenha(
+                "A nova senha e a confirmação da senha não conferem."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            setAlterandoSenha(true);
+
+            await alterarSenha({
+                senhaAtual: senhaFormulario.senhaAtual,
+                novaSenha: senhaFormulario.novaSenha,
+                confirmarNovaSenha:
+                    senhaFormulario.confirmarNovaSenha,
+            });
+
+
+            setSenhaFormulario({
+                senhaAtual: "",
+                novaSenha: "",
+                confirmarNovaSenha: "",
+            });
+
+
+            setSucessoSenha(
+                "Senha alterada com sucesso."
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+            if (error.response?.status === 400) {
+
+                setErroSenha(
+                    error.response?.data?.mensagem ||
+                    "Verifique os dados informados."
+                );
+
+            } else if (error.response?.status === 401) {
+
+                setErroSenha(
+                    error.response?.data?.mensagem ||
+                    "A senha atual está incorreta ou sua sessão expirou."
+                );
+
+            } else {
+
+                setErroSenha(
+                    "Não foi possível alterar a senha."
+                );
+            }
+
+        } finally {
+
+            setAlterandoSenha(false);
         }
     }
 
@@ -228,7 +355,10 @@ function EditarAdministrador() {
                             `/administradores/${id}`
                         )
                     }
-                    disabled={salvando}
+                    disabled={
+                        salvando ||
+                        alterandoSenha
+                    }
                 >
                     ← Voltar para detalhes
                 </button>
@@ -280,7 +410,7 @@ function EditarAdministrador() {
 
 
                 {/* =========================
-                    ERRO
+                    ERRO GERAL
                 ========================= */}
 
                 {erro && (
@@ -293,7 +423,7 @@ function EditarAdministrador() {
 
 
                 {/* =========================
-                    FORMULÁRIO
+                    FORMULÁRIO DE DADOS
                 ========================= */}
 
                 <form
@@ -318,6 +448,7 @@ function EditarAdministrador() {
                             maxLength={100}
                             autoComplete="name"
                             required
+                            disabled={salvando}
                         />
 
                         <span>
@@ -344,6 +475,7 @@ function EditarAdministrador() {
                             maxLength={100}
                             autoComplete="email"
                             required
+                            disabled={salvando}
                         />
 
                         <span>
@@ -353,36 +485,8 @@ function EditarAdministrador() {
                     </div>
 
 
-                    {/* SENHA */}
-
-                    <div className="editar-administrador-field">
-
-                        <label htmlFor="senha">
-                            Nova senha
-                        </label>
-
-                        <input
-                            id="senha"
-                            name="senha"
-                            type="password"
-                            value={formulario.senha}
-                            onChange={handleChange}
-                            minLength={8}
-                            maxLength={20}
-                            placeholder="Deixe vazio para manter a senha atual"
-                            autoComplete="new-password"
-                        />
-
-                        <span>
-                            Preencha somente se desejar alterar a senha.
-                            A senha deve possuir entre 8 e 20 caracteres.
-                        </span>
-
-                    </div>
-
-
                     {/* =========================
-                        AÇÕES
+                        AÇÕES DOS DADOS
                     ========================= */}
 
                     <div className="editar-administrador-actions">
@@ -395,7 +499,10 @@ function EditarAdministrador() {
                                     `/administradores/${id}`
                                 )
                             }
-                            disabled={salvando}
+                            disabled={
+                                salvando ||
+                                alterandoSenha
+                            }
                         >
                             Cancelar
                         </button>
@@ -403,7 +510,10 @@ function EditarAdministrador() {
                         <button
                             type="submit"
                             className="editar-administrador-submit"
-                            disabled={salvando}
+                            disabled={
+                                salvando ||
+                                alterandoSenha
+                            }
                         >
                             {salvando
                                 ? "Salvando..."
@@ -413,6 +523,169 @@ function EditarAdministrador() {
                     </div>
 
                 </form>
+
+
+                {/* =================================================
+                    ALTERAÇÃO DE SENHA
+                    SOMENTE PARA O ADMINISTRADOR LOGADO
+                ================================================= */}
+
+                {ehAdministradorLogado && (
+
+                    <div className="editar-administrador-password-section">
+
+                        <div className="editar-administrador-section-divider" />
+
+                        <div className="editar-administrador-password-header">
+
+                            <div>
+
+                                <span className="editar-administrador-password-eyebrow">
+                                    SEGURANÇA
+                                </span>
+
+                                <h3>
+                                    Alterar senha
+                                </h3>
+
+                                <p>
+                                    Para alterar sua senha, informe a senha atual e defina uma nova senha.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        {/* ERRO DA SENHA */}
+
+                        {erroSenha && (
+
+                            <div className="editar-administrador-error">
+                                {erroSenha}
+                            </div>
+
+                        )}
+
+
+                        {/* SUCESSO */}
+
+                        {sucessoSenha && (
+
+                            <div className="editar-administrador-success">
+                                {sucessoSenha}
+                            </div>
+
+                        )}
+
+
+                        <form
+                            className="editar-administrador-form"
+                            onSubmit={handleAlterarSenha}
+                        >
+
+                            {/* SENHA ATUAL */}
+
+                            <div className="editar-administrador-field">
+
+                                <label htmlFor="senhaAtual">
+                                    Senha atual
+                                </label>
+
+                                <CampoSenha
+                                    id="senhaAtual"
+                                    name="senhaAtual"
+                                    label="Senha atual"
+                                    value={senhaFormulario.senhaAtual}
+                                    onChange={handleSenhaChange}
+                                    autoComplete="current-password"
+                                    required
+                                    disabled={alterandoSenha}
+                                />
+
+                                <span>
+                                    Informe sua senha atual.
+                                </span>
+
+                            </div>
+
+
+                            {/* NOVA SENHA */}
+
+                            <div className="editar-administrador-field">
+
+                                <label htmlFor="novaSenha">
+                                    Nova senha
+                                </label>
+
+                                <CampoSenha
+                                    id="novaSenha"
+                                    name="novaSenha"
+                                    label="Nova senha"
+                                    value={senhaFormulario.novaSenha}
+                                    onChange={handleSenhaChange}
+                                    minLength={8}
+                                    maxLength={20}
+                                    autoComplete="new-password"
+                                    required
+                                    disabled={alterandoSenha}
+                                />
+
+                                <span>
+                                    A senha deve possuir entre 8 e 20 caracteres.
+                                </span>
+
+                            </div>
+
+
+                            {/* CONFIRMAR NOVA SENHA */}
+
+                            <div className="editar-administrador-field">
+
+                                <label htmlFor="confirmarNovaSenha">
+                                    Confirmar nova senha
+                                </label>
+
+                                <CampoSenha
+                                    id="confirmarNovaSenha"
+                                    name="confirmarNovaSenha"
+                                    label="Confirmar nova senha"
+                                    value={senhaFormulario.confirmarNovaSenha}
+                                    onChange={handleSenhaChange}
+                                    minLength={8}
+                                    maxLength={20}
+                                    autoComplete="new-password"
+                                    required
+                                    disabled={alterandoSenha}
+                                />
+
+                                <span>
+                                    Digite novamente a nova senha.
+                                </span>
+
+                            </div>
+
+
+                            {/* BOTÃO ALTERAR SENHA */}
+
+                            <div className="editar-administrador-password-actions">
+
+                                <button
+                                    type="submit"
+                                    className="editar-administrador-submit"
+                                    disabled={alterandoSenha}
+                                >
+                                    {alterandoSenha
+                                        ? "Alterando senha..."
+                                        : "Alterar senha"}
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                )}
 
             </div>
 

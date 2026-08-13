@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import "../styles/Login.css";
@@ -307,17 +308,12 @@ function Login() {
 
                             </label>
 
-                            <button
-                                type="button"
+                            <Link
+                                to="/esqueci-senha"
                                 className="login-forgot"
-                                onClick={() =>
-                                    alert(
-                                        "A recuperação de senha será disponibilizada em breve."
-                                    )
-                                }
                             >
                                 Esqueci minha senha
-                            </button>
+                            </Link>
 
                         </div>
 
