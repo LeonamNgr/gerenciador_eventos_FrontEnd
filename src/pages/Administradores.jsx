@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
-    buscarPorNome,
-    buscarTodos,
+    buscarPagina,
 } from "../services/administradorService";
 
 import "../styles/Administradores.css";
@@ -12,25 +11,109 @@ function Administradores() {
 
     const navigate = useNavigate();
 
+
+    /*
+     * =========================
+     * ADMINISTRADORES
+     * =========================
+     */
+
     const [administradores, setAdministradores] = useState([]);
+
     const [nome, setNome] = useState("");
+
     const [carregando, setCarregando] = useState(true);
+
     const [erro, setErro] = useState("");
 
-    async function carregarAdministradores() {
+
+    /*
+     * =========================
+     * PAGINAÇÃO
+     * =========================
+     */
+
+    const [paginaAtual, setPaginaAtual] = useState(0);
+
+    const [totalPaginas, setTotalPaginas] = useState(0);
+
+    const TAMANHO_PAGINA = 6;
+
+
+    /*
+     * =========================
+     * CARREGAR ADMINISTRADORES
+     * =========================
+     */
+
+    async function carregarAdministradores(
+        pagina = 0,
+        termo = ""
+    ) {
 
         try {
 
             setErro("");
+
             setCarregando(true);
 
-            const dados = await buscarTodos();
 
-            setAdministradores(dados);
+            const dados =
+                await buscarPagina(
+                    pagina,
+                    TAMANHO_PAGINA,
+                    "nome",
+                    termo.trim()
+                );
+
+
+            setAdministradores(
+                dados.content || []
+            );
+
+
+            setPaginaAtual(
+                dados.number ?? pagina
+            );
+
+
+            setTotalPaginas(
+                dados.totalPages ?? 0
+            );
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "ERRO AO CARREGAR ADMINISTRADORES:",
+                error
+            );
+
+            console.error(
+                "STATUS:",
+                error.response?.status
+            );
+
+            console.error(
+                "RESPOSTA:",
+                error.response?.data
+            );
+
+            console.error(
+                "URL:",
+                error.config?.url
+            );
+
+            console.error(
+                "PARAMETROS:",
+                error.config?.params
+            );
+
+
+            setAdministradores([]);
+
+            setPaginaAtual(0);
+
+            setTotalPaginas(0);
 
             setErro(
                 "Não foi possível carregar os administradores."
@@ -42,59 +125,132 @@ function Administradores() {
         }
     }
 
+
+    /*
+     * =========================
+     * BUSCAR
+     * =========================
+     */
+
     async function handleBuscar(event) {
 
         event.preventDefault();
 
-        const termo = nome.trim();
+
+        const termo =
+            nome.trim();
+
+
+        /*
+         * Busca vazia
+         */
 
         if (!termo) {
 
-            await carregarAdministradores();
+            setPaginaAtual(0);
+
+            await carregarAdministradores(
+                0,
+                ""
+            );
 
             return;
         }
 
-        try {
 
-            setErro("");
-            setCarregando(true);
+        /*
+         * Busca por nome
+         */
 
-            const dados = await buscarPorNome(termo);
+        setPaginaAtual(0);
 
-            setAdministradores(dados);
-
-        } catch (error) {
-
-            console.error(error);
-
-            setAdministradores([]);
-
-            setErro(
-                "Não foi possível realizar a busca."
-            );
-
-        } finally {
-
-            setCarregando(false);
-        }
+        await carregarAdministradores(
+            0,
+            termo
+        );
     }
 
-    function limparBusca() {
+
+    /*
+     * =========================
+     * LIMPAR BUSCA
+     * =========================
+     */
+
+    async function limparBusca() {
 
         setNome("");
 
-        carregarAdministradores();
+        setPaginaAtual(0);
+
+        await carregarAdministradores(
+            0,
+            ""
+        );
     }
+
+
+    /*
+     * =========================
+     * MUDAR PÁGINA
+     * =========================
+     */
+
+    async function mudarPagina(
+        novaPagina
+    ) {
+
+        if (novaPagina < 0) {
+            return;
+        }
+
+
+        if (
+            totalPaginas > 0 &&
+            novaPagina >= totalPaginas
+        ) {
+            return;
+        }
+
+
+        await carregarAdministradores(
+            novaPagina,
+            nome
+        );
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }
+
+
+    /*
+     * =========================
+     * CARREGAMENTO INICIAL
+     * =========================
+     */
 
     useEffect(() => {
 
-        carregarAdministradores();
+        carregarAdministradores(
+            0,
+            ""
+        );
 
     }, []);
 
+
+    /*
+     * =========================
+     * RENDER
+     * =========================
+     */
+
     return (
         <section className="administradores-page">
+
 
             {/* =========================
                 CABEÇALHO
@@ -118,11 +274,14 @@ function Administradores() {
 
                 </div>
 
+
                 <button
                     type="button"
                     className="administradores-primary-button"
                     onClick={() =>
-                        navigate("/administradores/novo")
+                        navigate(
+                            "/administradores/novo"
+                        )
                     }
                 >
                     + Novo administrador
@@ -151,11 +310,14 @@ function Administradores() {
                         placeholder="Buscar administrador por nome..."
                         value={nome}
                         onChange={(event) =>
-                            setNome(event.target.value)
+                            setNome(
+                                event.target.value
+                            )
                         }
                     />
 
                 </div>
+
 
                 <button
                     type="submit"
@@ -163,6 +325,7 @@ function Administradores() {
                 >
                     Buscar
                 </button>
+
 
                 <button
                     type="button"
@@ -257,12 +420,15 @@ function Administradores() {
                                     }
                                 >
 
+
                                     {/* AVATAR */}
 
                                     <div className="administrador-avatar">
+
                                         {administrador.nome
                                             ?.charAt(0)
                                             ?.toUpperCase()}
+
                                     </div>
 
 
@@ -292,6 +458,72 @@ function Administradores() {
 
                             )
                         )}
+
+                    </div>
+
+                )}
+
+
+            {/* =========================
+                PAGINAÇÃO
+            ========================= */}
+
+            {!carregando &&
+                !erro &&
+                administradores.length > 0 &&
+                totalPaginas > 1 && (
+
+                    <div className="administradores-paginacao">
+
+
+                        <button
+                            type="button"
+                            className="administradores-paginacao-button"
+                            onClick={() =>
+                                mudarPagina(
+                                    paginaAtual - 1
+                                )
+                            }
+                            disabled={
+                                paginaAtual === 0
+                            }
+                        >
+                            ← Anterior
+                        </button>
+
+
+                        <span className="administradores-paginacao-info">
+
+                            Página{" "}
+
+                            <strong>
+                                {paginaAtual + 1}
+                            </strong>
+
+                            {" "}de{" "}
+
+                            <strong>
+                                {totalPaginas}
+                            </strong>
+
+                        </span>
+
+
+                        <button
+                            type="button"
+                            className="administradores-paginacao-button"
+                            onClick={() =>
+                                mudarPagina(
+                                    paginaAtual + 1
+                                )
+                            }
+                            disabled={
+                                paginaAtual >=
+                                totalPaginas - 1
+                            }
+                        >
+                            Próxima →
+                        </button>
 
                     </div>
 
